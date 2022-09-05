@@ -1,14 +1,11 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Categories } from "./category.entity";
-import { Maintenence } from "./maintenence.entity";
 import { Rent } from "./rent.entity";
 
 @Entity("cars")
@@ -49,12 +46,11 @@ export class Cars {
   @Column({ type: "integer" })
   hp: number;
 
+  @Column({ default: false })
+  maintenence: boolean;
+
   @ManyToOne(() => Categories, { eager: true })
   categories: Categories;
-
-  @OneToOne(() => Maintenence, { eager: true })
-  @JoinColumn()
-  maintenence: Maintenence;
 
   @OneToMany(() => Rent, (rent) => rent.cars)
   rent: Rent[];
