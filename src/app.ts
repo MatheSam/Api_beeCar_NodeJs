@@ -21,7 +21,6 @@ app.use("/cars", carsRouter);
 app.use("/category", categoryRouter);
 app.use("/cnh", cnhRouter);
 app.use("/login", loginRouter);
-app.use("/maintenence", maintenenceRouter);
 app.use("/rent", rentRouter);
 app.use("/users", usersRouter);
 
