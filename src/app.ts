@@ -8,7 +8,6 @@ import { carsRouter } from "./routes/cars";
 import { categoryRouter } from "./routes/category";
 import { cnhRouter } from "./routes/cnh";
 import { loginRouter } from "./routes/login";
-import { maintenenceRouter } from "./routes/maintenence";
 import { rentRouter } from "./routes/rent";
 import { usersRouter } from "./routes/users";
 
