@@ -4,5 +4,5 @@ export const cardRouter = Router();
 
 cardRouter.post("");
 cardRouter.get("");
-cardRouter.patch("");
-cardRouter.delete("");
+cardRouter.patch("/:id");
+cardRouter.delete("/:id");

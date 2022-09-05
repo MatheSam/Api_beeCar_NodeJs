@@ -4,5 +4,5 @@ export const usersRouter = Router();
 
 usersRouter.post("");
 usersRouter.get("");
-usersRouter.patch("");
+usersRouter.get("/cars");
 usersRouter.delete("");

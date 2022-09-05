@@ -36,6 +36,9 @@ export class Categories {
   @Column({ type: "decimal", precision: 12, scale: 2 })
   pricePeryear: number;
 
+  @Column({ default: true })
+  isActive: boolean;
+
   @OneToMany(() => Cars, (cars) => cars.categories)
   cars: Cars[];
 }

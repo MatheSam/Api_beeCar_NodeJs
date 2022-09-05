@@ -4,5 +4,6 @@ export const categoryRouter = Router();
 
 categoryRouter.post("");
 categoryRouter.get("");
-categoryRouter.patch("");
-categoryRouter.delete("");
+categoryRouter.get("/:id/cars");
+categoryRouter.patch("/:id");
+categoryRouter.delete("/:id");

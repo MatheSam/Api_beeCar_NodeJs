@@ -14,14 +14,14 @@ import { usersRouter } from "./routes/users";
 const app = express();
 app.use(express.json());
 
-app.use("/address", addressRouter);
-app.use("/card", cardRouter);
 app.use("/cars", carsRouter);
 app.use("/category", categoryRouter);
-app.use("/cnh", cnhRouter);
 app.use("/login", loginRouter);
 app.use("/rent", rentRouter);
-app.use("/users", usersRouter);
+app.use("/profile", usersRouter);
+app.use("/profile/address", addressRouter);
+app.use("/profile/card", cardRouter);
+app.use("/profile/cnh", cnhRouter);
 
 app.use(handleError);
 

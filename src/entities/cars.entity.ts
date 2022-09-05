@@ -37,6 +37,9 @@ export class Cars {
   @Column({ default: true })
   document: boolean;
 
+  @Column({ default: true })
+  isActive: boolean;
+
   @Column({ type: "decimal", precision: 12, scale: 2 })
   price: number;
 
@@ -48,6 +51,9 @@ export class Cars {
 
   @Column({ default: false })
   maintenence: boolean;
+
+  @Column()
+  img: string;
 
   @ManyToOne(() => Categories, { eager: true })
   categories: Categories;
