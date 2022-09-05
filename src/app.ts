@@ -15,8 +15,6 @@ import { usersRouter } from "./routes/users";
 const app = express();
 app.use(express.json());
 
-/* teeste */
-
 app.use("/address", addressRouter);
 app.use("/card", cardRouter);
 app.use("/cars", carsRouter);
