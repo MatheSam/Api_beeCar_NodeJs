@@ -1,8 +1,9 @@
 import { Router } from "express";
+import createCarController from "../../controllers/cars/createCar.controller";
 
 export const carsRouter = Router();
 
-carsRouter.post("");
+carsRouter.post("", createCarController);
 carsRouter.get("");
 carsRouter.get("/:id");
 carsRouter.patch("/:id");
