@@ -6,32 +6,7 @@ import createCarService from "../../services/cars/createCar.service";
 
 const createCarController = async (req: Request, res: Response) => {
   try {
-    const {
-      licensePlate,
-      brand,
-      categoriesId,
-      color,
-      fuel,
-      hp,
-      img,
-      km,
-      model,
-      price,
-      year,
-    }: ICarsRequest = req.body;
-    const carCreated = await createCarService({
-      licensePlate,
-      brand,
-      categoriesId,
-      color,
-      fuel,
-      hp,
-      img,
-      km,
-      model,
-      price,
-      year,
-    });
+    const carCreated = await createCarService(req.body);
     return res.status(201).json(carCreated);
   } catch (error) {
     if (error instanceof AppError) {
