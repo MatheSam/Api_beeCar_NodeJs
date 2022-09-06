@@ -9,7 +9,6 @@ import {
 } from "typeorm";
 import { Addresses } from "./address.entity";
 import { Cards } from "./card.entity";
-import { Cars } from "./cars.entity";
 import { Cnh } from "./cnh.entity";
 import { Rent } from "./rent.entity";
 
@@ -45,15 +44,15 @@ export class Users {
 
   @OneToOne(() => Cnh, { eager: true })
   @JoinColumn()
-  cnh: Cnh;
+  cnh?: Cnh;
 
   @OneToOne(() => Addresses, { eager: true })
   @JoinColumn()
-  address: Addresses;
+  address?: Addresses;
 
   @OneToMany(() => Cards, (card) => card.user)
-  card: Cards[];
+  cards?: Cards[];
 
   @OneToMany(() => Rent, (rent) => rent.users)
-  rent: Rent[];
+  rent?: Rent[];
 }
