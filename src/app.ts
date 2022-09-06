@@ -1,5 +1,5 @@
-import "reflect-metadata";
 import "express-async-errors";
+import "reflect-metadata";
 import express from "express";
 import { handleError } from "./middlewares/errors.mid";
 import { addressRouter } from "./routes/address";
