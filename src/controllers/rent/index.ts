@@ -1,8 +1,9 @@
-import { Router } from "express";
+import { Request, Response } from "express";
 
-export const rentRouter = Router();
+const createRestController = async (req: Request, res: Response) => {
+  try {
+    const { id };
+  } catch (error) {}
+};
 
-rentRouter.post("");
-rentRouter.get("");
-rentRouter.patch("");
-rentRouter.delete("");
+export { createRestController };
