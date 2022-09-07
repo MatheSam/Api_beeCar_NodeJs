@@ -3,6 +3,7 @@ import {
   createCategoryController,
   listCarsOfCategoryController,
   listCategoryController,
+  updateCategoryController,
 } from "../../controllers/category";
 import { ensureAuthenticationMiddleware } from "../../middlewares/ensureAuthenticationMiddleware";
 
@@ -15,5 +16,5 @@ categoryRouter.post(
 );
 categoryRouter.get("", listCategoryController);
 categoryRouter.get("/:id/cars", listCarsOfCategoryController);
-categoryRouter.patch("/:id");
+categoryRouter.patch("/:id", ensureAuthenticationMiddleware, updateCategoryController);
 categoryRouter.delete("/:id");
