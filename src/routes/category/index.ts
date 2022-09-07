@@ -1,10 +1,19 @@
 import { Router } from "express";
-import { createCategoryController, listCategoryController } from "../../controllers/category";
+import {
+  createCategoryController,
+  listCarsOfCategoryController,
+  listCategoryController,
+} from "../../controllers/category";
+import { ensureAuthenticationMiddleware } from "../../middlewares/ensureAuthenticationMiddleware";
 
 export const categoryRouter = Router();
 
-categoryRouter.post("", createCategoryController);
+categoryRouter.post(
+  "",
+  ensureAuthenticationMiddleware,
+  createCategoryController
+);
 categoryRouter.get("", listCategoryController);
-categoryRouter.get("/:id/cars");
+categoryRouter.get("/:id/cars", listCarsOfCategoryController);
 categoryRouter.patch("/:id");
 categoryRouter.delete("/:id");
