@@ -6,12 +6,8 @@ services:
     build: .
     ports:
       - 3000:3000
-    environment:
-      - DB_HOST=db
-      - DB_PASSWORD=1234
-      - DB_USER=ADMIN
-      - DB=beecar
-      - SECRET_KEY=ataldachave
+    env_file:
+      - .env
     depends_on:
       - db
     volumes:
@@ -23,6 +19,6 @@ services:
     ports:
       - 5435:5432
     environment:
-      - POSTGRES_USER=ADMIN
-      - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=beecar
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB}
