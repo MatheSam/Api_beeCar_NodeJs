@@ -8,7 +8,7 @@ const userIsAdmMiddleware = (
   const { isAdm } = req.user;
 
   if (!isAdm) {
-    res.status(403).json({ message: "You aren't allowed to do that" });
+    res.status(403).json({ message: "You aren't allowed to do this" });
   } else {
     next();
   }
