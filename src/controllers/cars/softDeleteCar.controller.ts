@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { AppError } from "../../errors/AppError";
 import { handleError } from "../../middlewares/errors.mid";
-import updateCarService from "../../services/cars/updateCar.service";
+import softDeleteCarService from "../../services/cars/softDeleteCar.service";
 
-const updateCarController = async (req: Request, res: Response) => {
+const softDeleteCarController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    await updateCarService(req.body, id);
-    res.json({ message: "Car updated" });
+    const deletedCar = await softDeleteCarService(id);
+    return res.status(204).json(deletedCar);
   } catch (error) {
     if (error instanceof AppError) {
       handleError(error, res);
@@ -15,4 +15,4 @@ const updateCarController = async (req: Request, res: Response) => {
   }
 };
 
-export default updateCarController;
+export default softDeleteCarController;

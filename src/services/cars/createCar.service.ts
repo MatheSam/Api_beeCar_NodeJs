@@ -26,9 +26,8 @@ const createCarService = async ({
     throw new AppError("This car already exists in our system");
   }
 
-  const category = categoryRepository.findOneBy({ name: categoryName });
+  const category = await categoryRepository.findOneBy({ name: categoryName });
 
-  console.log(category)
 
   if (!category) {
     throw new AppError("Category not found", 404);
@@ -37,7 +36,7 @@ const createCarService = async ({
   const carCreated = await carRepository.save({
     licensePlate,
     brand,
-    categoriesId: category,
+    categories: category,
     color,
     fuel,
     hp,
@@ -47,8 +46,6 @@ const createCarService = async ({
     price,
     year,
   });
-
-  console.log(carCreated)
 
   return carCreated;
 };
