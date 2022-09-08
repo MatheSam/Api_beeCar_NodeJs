@@ -1,5 +1,6 @@
 import AppDataSource from "../../data-source";
 import { Cars } from "../../entities/cars.entity";
+import { Categories } from "../../entities/category.entity";
 import { Rent } from "../../entities/rent.entity";
 import { Users } from "../../entities/users.entity";
 import { AppError } from "../../errors/AppError";
@@ -19,6 +20,7 @@ const createRentService = async (
   const UserRepository = AppDataSource.getRepository(Users);
   const carRepository = AppDataSource.getRepository(Cars);
   const rentRepository = AppDataSource.getRepository(Rent);
+  const categoryRepository = AppDataSource.getRepository(Categories);
 
   const car = await carRepository.findOneBy({ id: carId });
 
@@ -31,6 +33,11 @@ const createRentService = async (
   if (!user) {
     throw new AppError("User not found!", 404);
   }
+
+  const initialValue = car.categories.pricePerDay;
+  // const days = [initialDate.split("/")[0], finalDate.split("/")[0]];
+  // console.log(days);
+  console.log(initialValue);
 
   const rent = rentRepository.create({
     cars: car,
