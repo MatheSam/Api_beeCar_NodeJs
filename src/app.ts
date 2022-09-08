@@ -25,22 +25,4 @@ app.use("/profile/address", addressRouter);
 app.use("/profile/card", cardRouter);
 app.use("/profile/cnh", cnhRouter);
 
-app.use(
-  (err: Error, request: Request, response: Response, next: NextFunction) => {
-    if (err instanceof AppError) {
-      return response.status(err.statusCode).json({
-        status: "error",
-        message: err.message,
-      });
-    }
-
-    console.error(err);
-
-    return response.status(500).json({
-      status: "error",
-      message: "Internal server error",
-    });
-  }
-);
-
 export default app;
