@@ -4,6 +4,7 @@ import { Rent } from "../../entities/rent.entity";
 import { Users } from "../../entities/users.entity";
 import { AppError } from "../../errors/AppError";
 import { IRentRequest } from "../../interfaces/rent";
+import { calcRent } from "../../utils";
 
 const createRentService = async (
   userId: string,
@@ -25,20 +26,21 @@ const createRentService = async (
     throw new AppError("User not found!", 404);
   }
 
-  const initialValue = car.categories.pricePerDay;
-  const date1 = new Date(initialDate);
-  console.log(date1, initialDate);
-  const date2 = new Date(finalDate);
-  const timeDiff = Math.abs(date2.getTime() - date1.getTime());
-  const difDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  const rentPrice = calcRent(
+    initialDate,
+    initialHour,
+    finalDate,
+    finalHour,
+    car.categories.pricePerDay
+  );
 
   const rent = rentRepository.create({
     cars: car,
-    finalDate: date2,
+    finalDate,
     finalHour,
-    initialDate: date1,
+    initialDate,
     initialHour,
-    totalValue: initialValue * +difDays,
+    totalValue: rentPrice,
     users: user,
   });
 
