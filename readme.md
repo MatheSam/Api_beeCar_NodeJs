@@ -20,6 +20,190 @@ Além disso, o usuário poderá cadastrar um ou mais cartões de crédito, visua
 
 URL Base: https://exemplodeurlbase.com/
 
+## 👤 /profile
+
+Rota de criação e atualização de usuários.
+
+**POST /profile (criação de usuário adm)**
+
+Padrão de corpo (body) para a requisição:
+
+```json
+{
+  "name": "Samuel Persuhn",
+  "birthDate": "06/07/1996",
+  "cpf": "00000000000",
+  "email": "samu192@beecar.com",
+  "password": "deusfe10",
+  "isAdm": true
+}
+```
+
+Retorno esperado (201)
+
+```json
+{
+  "id": "uuid54-7458d-85d87f",
+  "name": "Samuel Persuhn",
+  "birthDate": "06/07/1996",
+  "age": 26,
+  "cpf": "00000000000",
+  "email": "samu192@beecar.com",
+  "isAdm": true,
+  "isActive": true
+}
+```
+
+🟠 Observação: o parâmetro **age** é gerado pelo servidor.
+
+**POST /profile (criação de usuário não adm)**
+
+Padrão de corpo (body) para a requisição:
+
+```json
+{
+  "name": "Samuel Persuhn",
+  "birthDate": "06/07/1996",
+  "cpf": "00000000000",
+  "email": "samuelpr@gmail.com",
+  "password": "deusfe10"
+}
+```
+
+Retorno esperado (201):
+
+```json
+{
+  "id": "uuid54-7458d-85d87f",
+  "name": "Samuel Persuhn",
+  "birthDate": "06/07/1996",
+  "age": 26,
+  "cpf": "00000000000",
+  "email": "samuelpr@gmail.com",
+  "isAdm": false,
+  "isActive": true
+}
+```
+
+🟠 Observação: o parâmetro **age** é gerado pelo servidor.
+
+**GET /profile**
+
+Lista todos os usuários **(somente administradores)**
+
+Retorno esperado (200):
+
+```json
+{
+	"users":{""}
+}
+```
+
+**GET /profile/cars**
+
+Lista todos os carros alugados pelo usuário (histórico).
+
+Retorno esperado (200):
+
+```json
+"cars": [
+	{
+		"id": "45546545",
+		"todos": "os dados"
+	},
+	{
+		"id": "45546545",
+		"todos": "os dados"
+		}
+]
+```
+
+**PATCH /profile**
+
+Rota para inativação do usuário.
+
+Exemplo de requisição (body):
+
+```json
+{
+  "isActive": false
+}
+```
+
+Retorno esperado (203):
+
+```json
+{
+  "message": "the account has been deactivated"
+}
+```
+
+🟠 Observação: a conta do usuário é apenas desativada, sendo possível ativá-la posteriormente.
+
+❌ **POSSÍVEIS ERROS DA ROTA**
+
+**POST /profile (400) bad request**
+
+Alguma propriedade obrigatória não foi passada.
+
+Retorno esperado:
+
+```json
+{
+  "message": "missing properties on body request"
+}
+```
+
+**GET /profile (401) Unauthorized**
+
+Não foi passado token no header da requisição ou o mesmo é invalido.
+
+Retorno esperado:
+
+```json
+{
+  "message": "missing token"
+}
+```
+
+**GET /profile (403) Forbbiden**
+
+Token passado no header, porém, essa requisição precisa de um token de administrador;
+
+Retorno esperado:
+
+```json
+{
+  "message": "you need admin permission"
+}
+```
+
+**PATCH /profile (401) Unauthorized**
+
+Requisição feita sem token no header.
+
+Retorno esperado:
+
+```json
+{
+  "message": "missing token"
+}
+```
+
+**PATCH /profile (400) bad request**
+
+No caso da inativação do usuário ou qualquer outra alteração não é permitido caso o usuário já esteja com o valor da propriedade **isActive** como **false**.
+
+Caso deseje reativar o usuário, a propriedade **isActive** deve ser passada como **true** no corpo da requisição.
+
+Retorno esperado:
+
+```json
+{
+  "message": "missing properties on body request"
+}
+```
+
 ### /category
 
 **POST /category (criação de uma categoria)**
@@ -47,8 +231,8 @@ Padrão de resposta:
 
 ```json
 {
-  "id": "uuid-4555sd-exemplo",
-  "name": "Categoria A",
+	"id": "uuid-4555sd-exemplo"
+	"name": "Categoria A",
   "automatic": false,
   "type": "hatch",
   "airConditioning": true,
@@ -76,34 +260,34 @@ Padrão de resposta:
 
 ```json
 [
-  {
-    "id": "uuid-4555sd-exemplo",
-    "name": "Categoria A",
-    "automatic": false,
-    "type": "hatch",
-    "airConditioning": true,
-    "directionType": "eletro-hidráulica",
-    "powerWIndows": true,
-    "pricePerDay": "120,00",
-    "pricePerWeekend": "350,00",
-    "pricePerMouth": "1200,00",
-    "pricePerYear": "6759,00",
-    "isActive": true
-  },
-  {
-    "id": "uuid-4555sd-exemplo",
-    "name": "Categoria A",
-    "automatic": false,
-    "type": "hatch",
-    "airConditioning": true,
-    "directionType": "eletro-hidráulica",
-    "powerWIndows": true,
-    "pricePerDay": "120,00",
-    "pricePerWeekend": "350,00",
-    "pricePerMouth": "1200,00",
-    "pricePerYear": "6759,00",
-    "isActive": true
-  }
+	{
+		"id": "uuid-4555sd-exemplo"
+		"name": "Categoria A",
+	  "automatic": false,
+	  "type": "hatch",
+	  "airConditioning": true,
+	  "directionType": "eletro-hidráulica",
+	  "powerWIndows": true,
+	  "pricePerDay": "120,00",
+	  "pricePerWeekend": "350,00",
+	  "pricePerMouth": "1200,00",
+	  "pricePerYear": "6759,00",
+	  "isActive": true
+	},
+	{
+		"id": "uuid-4555sd-exemplo"
+		"name": "Categoria A",
+	  "automatic": false,
+	  "type": "hatch",
+	  "airConditioning": true,
+	  "directionType": "eletro-hidráulica",
+	  "powerWIndows": true,
+	  "pricePerDay": "120,00",
+	  "pricePerWeekend": "350,00",
+	  "pricePerMouth": "1200,00",
+	  "pricePerYear": "6759,00",
+	  "isActive": true
+	},
 ]
 ```
 
