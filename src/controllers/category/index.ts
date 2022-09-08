@@ -4,6 +4,7 @@ import createCategoryService from "../../services/category/createCategory.servic
 import listCategoriesService from "../../services/category/listCategory.service";
 import listCarsOfCategoryService from "../../services/category/listCarsOfCategory.service";
 import updateCategoryService from "../../services/category/updateCategory.service";
+import deleteCategoryService from "../../services/category/deleteCategory.service";
 
 export const createCategoryController = async (req: Request, res: Response) => {
   try {
@@ -58,6 +59,26 @@ export const updateCategoryController = async (
     const { id } = req.params;
     const carsOfCategory = await listCarsOfCategoryService(id);
     return res.status(201).json(carsOfCategory);
+  } catch (error) {
+    if (error instanceof AppError) {
+      return res.status(error.statusCode).send({
+        message: error.message,
+      });
+    }
+  }
+};
+
+
+export const deleteCategoryController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+    const category = await deleteCategoryService(id);
+    return res.status(201).send({
+      message: "Category deleted successfully"
+    })
   } catch (error) {
     if (error instanceof AppError) {
       return res.status(error.statusCode).send({
