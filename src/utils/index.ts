@@ -27,12 +27,12 @@ export const calcRent = (
   rentPerDay: number
 ): number => {
   const date1 = new Date(initialDate);
-  const hourAll1 = initialHour.split(":");
+  const hourAll1: string[] = initialHour.split(":");
   const hour1: number = +hourAll1[0];
   const minutes1: number = +hourAll1[1];
 
   const date2 = new Date(finalDate);
-  const hourAll2 = finalHour.split(":");
+  const hourAll2: string[] = finalHour.split(":");
   const hour2: number = +hourAll2[0];
   const minutes2: number = +hourAll2[1];
 
