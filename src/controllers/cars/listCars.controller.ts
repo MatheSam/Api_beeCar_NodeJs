@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Response, Request } from "express";
 import { AppError } from "../../errors/AppError";
 import { handleError } from "../../middlewares/errors.mid";
 import listCarsService from "../../services/cars/listCars.service";

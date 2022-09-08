@@ -1,8 +1,23 @@
 import { Router } from "express";
+import {
+  createUserController,
+  listUsersController,
+} from "../../controllers/users";
+import { ensureAuthenticationMiddleware } from "../../middlewares/ensureAuthenticationMiddleware";
+import userIsAdmMiddleware from "../../middlewares/userIsAdm.middleware";
+import validationMiddleware from "../../middlewares/validation.middleware";
+import { userSchema } from "../../schemas/users/user.schemas";
 
-export const usersRouter = Router();
+const usersRouter = Router();
 
-usersRouter.post("");
-usersRouter.get("");
+usersRouter.post("", validationMiddleware(userSchema), createUserController);
+usersRouter.get(
+  "",
+  ensureAuthenticationMiddleware,
+  userIsAdmMiddleware,
+  listUsersController
+);
 usersRouter.get("/cars");
 usersRouter.delete("");
+
+export default usersRouter;

@@ -1,6 +1,7 @@
-import "express-async-errors";
 import "reflect-metadata";
-import express from "express";
+import "express-async-errors";
+import express, { Request, Response, NextFunction } from "express";
+
 import { handleError } from "./middlewares/errors.mid";
 import { addressRouter } from "./routes/address";
 import { cardRouter } from "./routes/card";
@@ -9,7 +10,8 @@ import { categoryRouter } from "./routes/category";
 import { cnhRouter } from "./routes/cnh";
 import { loginRouter } from "./routes/login";
 import { rentRouter } from "./routes/rent";
-import { usersRouter } from "./routes/users";
+import usersRouter from "./routes/users";
+import { AppError } from "./errors/AppError";
 
 const app = express();
 app.use(express.json());
@@ -22,7 +24,5 @@ app.use("/profile", usersRouter);
 app.use("/profile/address", addressRouter);
 app.use("/profile/card", cardRouter);
 app.use("/profile/cnh", cnhRouter);
-
-app.use(handleError);
 
 export default app;

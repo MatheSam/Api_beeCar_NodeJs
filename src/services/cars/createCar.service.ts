@@ -1,12 +1,13 @@
 import AppDataSource from "../../data-source";
 import { Cars } from "../../entities/cars.entity";
+import { Categories } from "../../entities/category.entity";
 import { AppError } from "../../errors/AppError";
 import { ICarsRequest } from "../../interfaces/cars";
 
 const createCarService = async ({
   licensePlate,
   brand,
-  categoriesId,
+  categoryName,
   color,
   fuel,
   hp,
@@ -17,6 +18,7 @@ const createCarService = async ({
   year,
 }: ICarsRequest): Promise<Cars> => {
   const carRepository = AppDataSource.getRepository(Cars);
+  const categoryRepository = AppDataSource.getRepository(Categories);
 
   const carAlreadyExists = await carRepository.findOneBy({ licensePlate });
 
@@ -24,10 +26,17 @@ const createCarService = async ({
     throw new AppError("This car already exists in our system");
   }
 
+  const category = await categoryRepository.findOneBy({ name: categoryName });
+
+
+  if (!category) {
+    throw new AppError("Category not found", 404);
+  }
+
   const carCreated = await carRepository.save({
     licensePlate,
     brand,
-    categoriesId,
+    categories: category,
     color,
     fuel,
     hp,

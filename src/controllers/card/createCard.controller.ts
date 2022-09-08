@@ -8,9 +8,7 @@ const createCardController = async (req: Request, res: Response) => {
     
     try {
       const { cardNumber, validate, name }: ICardRequest = req.body;
-      const { id } = req.user;
-
-      
+      const { id } = req.user;      
     
       const card = await createCardService(id, { cardNumber, validate, name });
       return res.status(201).json(card);
