@@ -1,3 +1,5 @@
+# Documentação BeeCar
+
 # ❌ Problema
 
 Nos últimos anos, o valor dos impostos, manutenções periódicas ou não e os preços dos combustíveis aumentaram consideravelmente, trazendo um deficit passivo considerável a donos de automóveis no Brasil.
@@ -45,13 +47,24 @@ Padrão de resposta:
 
 ```json
 {
-  "message": "não tem"
+  "id": "uuid-4555sd-exemplo",
+  "name": "Categoria A",
+  "automatic": false,
+  "type": "hatch",
+  "airConditioning": true,
+  "directionType": "eletro-hidráulica",
+  "powerWIndows": true,
+  "pricePerDay": "120,00",
+  "pricePerWeekend": "350,00",
+  "pricePerMouth": "1200,00",
+  "pricePerYear": "6759,00",
+  "isActive": true
 }
 ```
 
 Observações: os elementos **pricePerMouth** e **pricePerYear** são opcionais, o resto dos dados é de caráter obrigatório na requisição.
 
-Atenção: Esse verbo de protocolo http desta rota é disponível apenas para usuários com autenticação de **administrador**.
+Atenção: O verbo de protocolo http desta rota é disponível apenas para usuários com autenticação de **administrador**.
 
 **GET /category**
 
@@ -62,10 +75,39 @@ Padrão de resposta:
 **STATUS CODE: 200**
 
 ```json
-{
-  "ainda terá exemplo": true
-}
+[
+  {
+    "id": "uuid-4555sd-exemplo",
+    "name": "Categoria A",
+    "automatic": false,
+    "type": "hatch",
+    "airConditioning": true,
+    "directionType": "eletro-hidráulica",
+    "powerWIndows": true,
+    "pricePerDay": "120,00",
+    "pricePerWeekend": "350,00",
+    "pricePerMouth": "1200,00",
+    "pricePerYear": "6759,00",
+    "isActive": true
+  },
+  {
+    "id": "uuid-4555sd-exemplo",
+    "name": "Categoria A",
+    "automatic": false,
+    "type": "hatch",
+    "airConditioning": true,
+    "directionType": "eletro-hidráulica",
+    "powerWIndows": true,
+    "pricePerDay": "120,00",
+    "pricePerWeekend": "350,00",
+    "pricePerMouth": "1200,00",
+    "pricePerYear": "6759,00",
+    "isActive": true
+  }
+]
 ```
+
+Atenção: O verbo de protocolo http desta rota é disponível apenas para usuários com autenticação de **administrador.**
 
 **GET /category/:id/cars**
 
