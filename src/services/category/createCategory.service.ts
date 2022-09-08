@@ -32,4 +32,5 @@ const createCategoryService = async (data: ICategoryRequest): Promise<Categories
 }
 
 
+
 export default createCategoryService;
