@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { AppError } from "../../errors/AppError";
-import { IRentRequest } from "../../interfaces/rent";
 import { handleError } from "../../middlewares/errors.mid";
 import createRentService from "../../services/rent/createRent.service";
 
