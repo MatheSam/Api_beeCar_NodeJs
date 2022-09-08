@@ -5,5 +5,4 @@ export interface IUserRequest {
   email: string;
   isAdm?: boolean;
   password: string;
-  isActive?: boolean;
 }
