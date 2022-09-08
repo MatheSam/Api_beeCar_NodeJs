@@ -8,15 +8,15 @@ export class Rent {
   id: string;
 
   @Column({ type: "date" })
-  initialDate: string;
+  initialDate: Date;
 
   @Column({ type: "time" })
   initialHour: string;
 
   @Column({ type: "date" })
-  finalDate: string;
+  finalDate: Date;
 
-  @Column({ type: "date" })
+  @Column({ type: "time" })
   finalHour: string;
 
   @Column({ type: "decimal", precision: 12, scale: 2 })

@@ -7,14 +7,7 @@ import { IRentRequest } from "../../interfaces/rent";
 
 const createRentService = async (
   userId: string,
-  {
-    carId,
-    finalDate,
-    finalHour,
-    initialDate,
-    initialHour,
-    totalValue,
-  }: IRentRequest
+  { carId, finalDate, finalHour, initialDate, initialHour }: IRentRequest
 ): Promise<Rent> => {
   const UserRepository = AppDataSource.getRepository(Users);
   const carRepository = AppDataSource.getRepository(Cars);
@@ -32,13 +25,20 @@ const createRentService = async (
     throw new AppError("User not found!", 404);
   }
 
+  const initialValue = car.categories.pricePerDay;
+  const date1 = new Date(initialDate);
+  console.log(date1, initialDate);
+  const date2 = new Date(finalDate);
+  const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+  const difDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
   const rent = rentRepository.create({
     cars: car,
-    finalDate,
+    finalDate: date2,
     finalHour,
-    initialDate,
+    initialDate: date1,
     initialHour,
-    totalValue,
+    totalValue: initialValue * +difDays,
     users: user,
   });
 
