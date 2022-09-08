@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import createCategoryService from "../../services/category/createCategory.service";
 import listCategoriesService from "../../services/category/listCategory.service";
 import listCarsOfCategoryService from "../../services/category/listCarsOfCategory.service";
+import updateCategoryService from "../../services/category/updateCategory.service";
 
 export const createCategoryController = async (req: Request, res: Response) => {
   try {
@@ -32,6 +33,24 @@ export const listCategoryController = async (req: Request, res: Response) => {
 };
 
 export const listCarsOfCategoryController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+    const data = req.body
+    const carsOfCategory = await updateCategoryService(id, data);
+    return res.status(201).json(carsOfCategory);
+  } catch (error) {
+    if (error instanceof AppError) {
+      return res.status(error.statusCode).send({
+        message: error.message,
+      });
+    }
+  }
+};
+
+export const updateCategoryController = async (
   req: Request,
   res: Response
 ) => {
