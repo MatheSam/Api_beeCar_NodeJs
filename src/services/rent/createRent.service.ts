@@ -1,6 +1,5 @@
 import AppDataSource from "../../data-source";
 import { Cars } from "../../entities/cars.entity";
-import { Categories } from "../../entities/category.entity";
 import { Rent } from "../../entities/rent.entity";
 import { Users } from "../../entities/users.entity";
 import { AppError } from "../../errors/AppError";
@@ -8,19 +7,11 @@ import { IRentRequest } from "../../interfaces/rent";
 
 const createRentService = async (
   userId: string,
-  {
-    carId,
-    finalDate,
-    finalHour,
-    initialDate,
-    initialHour,
-    totalValue,
-  }: IRentRequest
+  { carId, finalDate, finalHour, initialDate, initialHour }: IRentRequest
 ): Promise<Rent> => {
   const UserRepository = AppDataSource.getRepository(Users);
   const carRepository = AppDataSource.getRepository(Cars);
   const rentRepository = AppDataSource.getRepository(Rent);
-  const categoryRepository = AppDataSource.getRepository(Categories);
 
   const car = await carRepository.findOneBy({ id: carId });
 
@@ -35,17 +26,19 @@ const createRentService = async (
   }
 
   const initialValue = car.categories.pricePerDay;
-  // const days = [initialDate.split("/")[0], finalDate.split("/")[0]];
-  // console.log(days);
-  console.log(initialValue);
+  const date1 = new Date(initialDate);
+  console.log(date1, initialDate);
+  const date2 = new Date(finalDate);
+  const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+  const difDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
   const rent = rentRepository.create({
     cars: car,
-    finalDate,
+    finalDate: date2,
     finalHour,
-    initialDate,
+    initialDate: date1,
     initialHour,
-    totalValue,
+    totalValue: initialValue * +difDays,
     users: user,
   });
 
