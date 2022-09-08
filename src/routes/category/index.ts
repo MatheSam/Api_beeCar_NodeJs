@@ -1,10 +1,33 @@
 import { Router } from "express";
-import { createCategoryController, listCategoryController } from "../../controllers/category";
+import {
+  createCategoryController,
+  deleteCategoryController,
+  listCarsOfCategoryController,
+  listCategoryController,
+  updateCategoryController,
+} from "../../controllers/category";
+import { ensureAuthenticationMiddleware } from "../../middlewares/ensureAuthenticationMiddleware";
+import userIsAdmMiddleware from "../../middlewares/userIsAdm.middleware";
 
 export const categoryRouter = Router();
 
-categoryRouter.post("", createCategoryController);
+categoryRouter.post(
+  "",
+  userIsAdmMiddleware,
+  ensureAuthenticationMiddleware,
+  createCategoryController
+);
 categoryRouter.get("", listCategoryController);
-categoryRouter.get("/:id/cars");
-categoryRouter.patch("/:id");
-categoryRouter.delete("/:id");
+categoryRouter.get("/:id/cars", listCarsOfCategoryController);
+categoryRouter.patch(
+  "/:id",
+  userIsAdmMiddleware,
+  ensureAuthenticationMiddleware,
+  updateCategoryController
+);
+categoryRouter.delete(
+  "/:id",
+  userIsAdmMiddleware,
+  ensureAuthenticationMiddleware,
+  deleteCategoryController
+);

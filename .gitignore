@@ -2,3 +2,4 @@
 /dist
 .env
 yarn.lock
+docker-compose.yml

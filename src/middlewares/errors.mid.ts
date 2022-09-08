@@ -9,10 +9,4 @@ export const handleError = (err: any, response: Response) => {
       message: err.message,
     });
   }
-
-  return response.status(500).json({
-    status: "error",
-    code: 500,
-    message: "Internal server error",
-  });
 };

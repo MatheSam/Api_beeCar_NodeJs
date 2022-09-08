@@ -1,8 +1,39 @@
-import { Router } from "express";
+import AppDataSource from "../../data-source";
+import { Users } from "../../entities/users.entity";
+import { IUserRequest } from "../../interfaces/users";
+import { hash } from "bcryptjs";
+import { AppError } from "../../errors/AppError";
 
-export const usersRouter = Router();
+const createUserService = async ({
+  birthDate,
+  cpf,
+  email,
+  name,
+  password,
+  isAdm,
+}: IUserRequest): Promise<Users> => {
+  const userRepository = AppDataSource.getRepository(Users);
 
-usersRouter.post("");
-usersRouter.get("");
-usersRouter.patch("");
-usersRouter.delete("");
+  const hashedPassword = await hash(password, 10);
+
+  const birth = new Date(birthDate);
+  const now = new Date();
+
+  const age = +now.getFullYear() - +birth.getFullYear();
+
+  const user = userRepository.create({
+    birthDate,
+    cpf,
+    email,
+    age,
+    isAdm,
+    name,
+    password: hashedPassword,
+  });
+
+  await userRepository.save(user);
+
+  return user;
+};
+
+export { createUserService };
