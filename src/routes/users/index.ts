@@ -1,9 +1,11 @@
 import { Router } from "express";
 import {
   createUserController,
+  listProfileCarsController,
   listUsersController,
 } from "../../controllers/users";
 import { ensureAuthenticationMiddleware } from "../../middlewares/ensureAuthenticationMiddleware";
+import isOwnerMiddleware from "../../middlewares/isOwner.middleware";
 import userIsAdmMiddleware from "../../middlewares/userIsAdm.middleware";
 import validationMiddleware from "../../middlewares/validation.middleware";
 import { userSchema } from "../../schemas/users/user.schemas";
@@ -17,7 +19,12 @@ usersRouter.get(
   userIsAdmMiddleware,
   listUsersController
 );
-usersRouter.get("/cars");
+usersRouter.get(
+  "/cars",
+  ensureAuthenticationMiddleware,
+  isOwnerMiddleware,
+  listProfileCarsController
+);
 usersRouter.delete("");
 
 export default usersRouter;
