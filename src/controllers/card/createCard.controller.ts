@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 // import createCardService from "../../services/card/createCard.service";
 import { AppError } from "../../errors/AppError";
 import createCardService from "../../services/card/createCard.service";
+import { handleError } from "../../middlewares/errors.mid";
 
 const createCardController = async (req: Request, res: Response) => {
     
@@ -15,10 +16,9 @@ const createCardController = async (req: Request, res: Response) => {
     
   } catch (err) {
     if (err instanceof AppError) {
-        return res.status(err.statusCode).send({
-          message: err.message,
-        });
-      }
+      if (err instanceof AppError) {
+        handleError(err, res);
+      }}
   }
 };
 

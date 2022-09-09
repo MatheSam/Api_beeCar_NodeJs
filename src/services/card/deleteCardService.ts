@@ -3,16 +3,16 @@ import { Cards } from "../../entities/card.entity";
 import { AppError } from "../../errors/AppError";
 import { ICardRequest } from "../../interfaces/card";
 
-const deleteCardservice = async ({ cardNumber }: ICardRequest) => {
+const deleteCardservice = async (id:string) => {
   const cardRepository = AppDataSource.getRepository(Cards);
 
-  const card = await cardRepository.findOne({ where: {cardNumber } });
+  const cardDel = await cardRepository.findOneBy({id})
 
-  if (!card) {
+  if (!cardDel) {
     throw new AppError("card not found", 400);
   }
 
-  await cardRepository.delete(card.cardNumber);
+  await cardRepository.delete(cardDel.id);
 
   return;
 };

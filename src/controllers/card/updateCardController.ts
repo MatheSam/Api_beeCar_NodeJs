@@ -1,19 +1,19 @@
 import { AppError } from "../../errors/AppError";
 import updateCardService from "../../services/card/updateCard.service";
 import { Response, Request } from "express";
+import { handleError } from "../../middlewares/errors.mid";
 
 const updateCardController = async (req: Request, res: Response) => {
   try {
+    const { id } = req.params;
     const { cardNumber, validate, name } = req.body;
 
-    const updatedCard = await updateCardService({ cardNumber, validate, name });
+    await updateCardService(id, { cardNumber, validate, name });
 
-    return res.status(201).json(updatedCard);
+    return res.status(201).json({ message: "card update" });
   } catch (err) {
     if (err instanceof AppError) {
-      return res.status(err.statusCode).send({
-        message: err.message,
-      });
+      handleError(err, res);
     }
   }
 };

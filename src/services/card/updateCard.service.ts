@@ -1,36 +1,26 @@
-import AppDataSource from "../../data-source"
-import { Cards } from "../../entities/card.entity"
-import { Users } from "../../entities/users.entity"
-import { AppError } from "../../errors/AppError"
-import { ICardRequest } from "../../interfaces/card"
+import AppDataSource from "../../data-source";
+import { Cards } from "../../entities/card.entity";
+import { Users } from "../../entities/users.entity";
+import { AppError } from "../../errors/AppError";
+import { ICardRequest } from "../../interfaces/card";
 
+const updateCardService = async (
+  id: string,
+  { cardNumber, validate, name }: ICardRequest
+): Promise<void> => {
+  const cardRepository = AppDataSource.getRepository(Cards);
 
-const updateCardService = async ({cardNumber,validate,name}:ICardRequest)=>{
+  const card = await cardRepository.findOneBy({ id });
 
-    const cardRepository = AppDataSource.getRepository(Cards)
-   
+  if (!card) {
+    throw new AppError("card not found", 404);
+  }
 
-    const card = await cardRepository.findOneBy({cardNumber})
+  await cardRepository.update(id, {
+    cardNumber: cardNumber || card.cardNumber,
+    validate: validate || card.validate,
+    name: name || card.name,
+  });
+};
 
-    if(!card){
-        throw new AppError("card not found",404)
-    }
-
-  const newCard =   await cardRepository.update(card,{
-        cardNumber:cardNumber || card.cardNumber,
-        validate:validate || card.validate ,
-        name:name || card.name
-    })
-    
-  return  newCard    
-    
-    
-    
-}
-
-export default updateCardService
-
-
-
-
-
+export default updateCardService;

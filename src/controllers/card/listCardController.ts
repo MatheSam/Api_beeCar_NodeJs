@@ -1,22 +1,23 @@
-import listCardService from "../../services/card/listCard.services"
-import { Request,Response } from "express"
-import { AppError } from "../../errors/AppError"
+import listCardService from "../../services/card/listCard.services";
+import { Request, Response } from "express";
+import { AppError } from "../../errors/AppError";
+import { handleError } from "../../middlewares/errors.mid";
 
+const listCardController = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
 
-const listCardController = async (req: Request, res: Response)=>{
-    try {
-        const card = await listCardService()
-        return res.status(200).send(card)
-        
-    } catch (err) {
-        if (err instanceof AppError) {
-            return res.status(err.statusCode).send({
-              message: err.message,
-            });
-          }
+    const card = await listCardService(id);
+
+    console.log(card);
+    return res.status(200).send(card);
+  } catch (err) {
+    if (err instanceof AppError) {
+      if (err instanceof AppError) {
+        handleError(err, res);
+      }
     }
+  }
+};
 
-
-}
-
-export default listCardController
+export default listCardController;

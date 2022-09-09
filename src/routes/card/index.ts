@@ -4,6 +4,7 @@ import deleteCardController from "../../controllers/card/deleteCard.controller";
 import listCardController from "../../controllers/card/listCardController";
 import updateCardController from "../../controllers/card/updateCardController";
 import { ensureAuthenticationMiddleware } from "../../middlewares/ensureAuthenticationMiddleware";
+import isOwnerMiddleware from "../../middlewares/isOwner.middleware";
 
 export const cardRouter = Router();
 

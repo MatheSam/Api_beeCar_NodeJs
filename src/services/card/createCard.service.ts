@@ -11,22 +11,15 @@ const createCardService = async (
   const usersRepository = AppDataSource.getRepository(Users);
   const cardRepository = AppDataSource.getRepository(Cards);
 
-  const card = cardRepository.create({
+  const user = await usersRepository.findOneBy({ id: userId });
+  console.log(user,"usssssssssssssssrrrrrrrrrrrrrrrrrrr")
+
+  const card = await cardRepository.save({
     cardNumber,
     validate,
     name,
+    user: user!,
   });
-
-  await cardRepository.save(card);
-
-  const user = await usersRepository.findOneBy({ id: userId });
-
-  if (!user) {
-    throw new AppError("user not found", 404);
-  }
-
-  await usersRepository.save({ cards: [...user.cards as Cards[], card] });
-
 
   return card;
 };

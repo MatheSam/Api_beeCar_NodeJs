@@ -50,7 +50,7 @@ export class Users {
   @JoinColumn()
   address?: Addresses;
 
-  @OneToMany(() => Cards, (card) => card.user)
+  @OneToMany(() => Cards, (card) => card.user,{eager:true})
   cards?: Cards[];
 
   @OneToMany(() => Rent, (rent) => rent.users)
