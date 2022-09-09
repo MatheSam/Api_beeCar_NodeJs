@@ -4,17 +4,11 @@ import { Rent } from "../../entities/rent.entity";
 import { Users } from "../../entities/users.entity";
 import { AppError } from "../../errors/AppError";
 import { IRentRequest } from "../../interfaces/rent";
+import { calcRent } from "../../utils";
 
 const createRentService = async (
   userId: string,
-  {
-    carId,
-    finalDate,
-    finalHour,
-    initialDate,
-    initialHour,
-    totalValue,
-  }: IRentRequest
+  { carId, finalDate, finalHour, initialDate, initialHour }: IRentRequest
 ): Promise<Rent> => {
   const UserRepository = AppDataSource.getRepository(Users);
   const carRepository = AppDataSource.getRepository(Cars);
@@ -32,13 +26,22 @@ const createRentService = async (
     throw new AppError("User not found!", 404);
   }
 
+  const rentPrice = calcRent(
+    initialDate,
+    initialHour,
+    finalDate,
+    finalHour,
+    car.categories.pricePerDay,
+    car.categories.pricePerMouth
+  );
+
   const rent = rentRepository.create({
     cars: car,
     finalDate,
     finalHour,
     initialDate,
     initialHour,
-    totalValue,
+    totalValue: rentPrice,
     users: user,
   });
 
