@@ -6,6 +6,7 @@ import {
   createUserService,
   listProfileCarsService,
   listUsersService,
+  updateUserService,
 } from "../../services/users";
 
 const createUserController = async (req: Request, res: Response) => {
@@ -58,4 +59,29 @@ const listProfileCarsController = async (req: Request, res: Response) => {
   }
 };
 
-export { createUserController, listUsersController, listProfileCarsController };
+const updateUserController = async (req: Request, res: Response) => {
+  try {
+    const userData = req.body;
+    const { id } = req.params;
+
+    const newUser = await updateUserService(id, userData);
+
+    res.json(instanceToPlain(newUser));
+  } catch (error) {
+    if (error instanceof AppError) {
+      handleError(error, res);
+    } else {
+      return res.status(500).json({
+        status: "error",
+        message: "Internal server error",
+      });
+    }
+  }
+};
+
+export {
+  createUserController,
+  listUsersController,
+  listProfileCarsController,
+  updateUserController,
+};
