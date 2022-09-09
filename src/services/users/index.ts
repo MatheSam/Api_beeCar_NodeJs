@@ -111,9 +111,24 @@ const updateUserService = async (id: string, userData: IUserRequest) => {
   return newUser;
 };
 
+const deleteUserService = async (id: string) => {
+  const userRepository = AppDataSource.getRepository(Users);
+
+  const user = await userRepository.findOneBy({
+    id,
+  });
+
+  if (!user) {
+    throw new AppError("User not Found");
+  }
+
+  await userRepository.delete(id);
+};
+
 export {
   createUserService,
   listUsersService,
   listProfileCarsService,
   updateUserService,
+  deleteUserService,
 };

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createUserController,
+  deleteUserController,
   listProfileCarsController,
   listUsersController,
   updateUserController,
@@ -34,6 +35,11 @@ usersRouter.patch(
   updateUserController
 );
 
-usersRouter.delete("");
+usersRouter.delete(
+  "",
+  ensureAuthenticationMiddleware,
+  isOwnerMiddleware,
+  deleteUserController
+);
 
 export default usersRouter;
