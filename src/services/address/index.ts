@@ -1,8 +1,31 @@
-import { Router } from "express";
+import AppDataSource from "../../data-source";
+import { Addresses } from "../../entities/address.entity";
+import { Users } from "../../entities/users.entity";
+import { AppError } from "../../errors/AppError";
+import { IAddressRequest } from "../../interfaces/address";
 
-export const addressRouter = Router();
+const createAddressService = async (
+  idUser: string,
+  address: IAddressRequest
+): Promise<Addresses> => {
+  const addressRepository = AppDataSource.getRepository(Addresses);
+  const userRepository = AppDataSource.getRepository(Users);
 
-addressRouter.post("");
-addressRouter.get("");
-addressRouter.patch("");
-addressRouter.delete("");
+  const newAddress = addressRepository.create({ ...address });
+
+  await addressRepository.save(newAddress);
+
+  const user = await userRepository.findOneBy({ id: idUser });
+
+  if (!user) {
+    throw new AppError("User not found");
+  }
+
+  user.address = newAddress;
+
+  await userRepository.save(user);
+
+  return newAddress;
+};
+
+export { createAddressService };
