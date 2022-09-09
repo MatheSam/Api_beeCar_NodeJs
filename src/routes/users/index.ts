@@ -7,7 +7,6 @@ import {
   updateUserController,
 } from "../../controllers/users";
 import { ensureAuthenticationMiddleware } from "../../middlewares/ensureAuthenticationMiddleware";
-import isOwnerMiddleware from "../../middlewares/isOwner.middleware";
 import userIsAdmMiddleware from "../../middlewares/userIsAdm.middleware";
 import validationMiddleware from "../../middlewares/validation.middleware";
 import { userSchema } from "../../schemas/users/user.schemas";
@@ -24,22 +23,11 @@ usersRouter.get(
 usersRouter.get(
   "/cars",
   ensureAuthenticationMiddleware,
-  isOwnerMiddleware,
   listProfileCarsController
 );
 
-usersRouter.patch(
-  "",
-  ensureAuthenticationMiddleware,
-  isOwnerMiddleware,
-  updateUserController
-);
+usersRouter.patch("", ensureAuthenticationMiddleware, updateUserController);
 
-usersRouter.delete(
-  "",
-  ensureAuthenticationMiddleware,
-  isOwnerMiddleware,
-  deleteUserController
-);
+usersRouter.delete("", ensureAuthenticationMiddleware, deleteUserController);
 
 export default usersRouter;
