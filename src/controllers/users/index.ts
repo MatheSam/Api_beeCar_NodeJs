@@ -4,6 +4,7 @@ import { AppError } from "../../errors/AppError";
 import { handleError } from "../../middlewares/errors.mid";
 import {
   createUserService,
+  deleteUserService,
   listProfileCarsService,
   listUsersService,
   updateUserService,
@@ -62,11 +63,30 @@ const listProfileCarsController = async (req: Request, res: Response) => {
 const updateUserController = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
-    const { id } = req.params;
+    const { id } = req.user;
 
     const newUser = await updateUserService(id, userData);
 
     res.json(instanceToPlain(newUser));
+  } catch (error) {
+    if (error instanceof AppError) {
+      handleError(error, res);
+    } else {
+      return res.status(500).json({
+        status: "error",
+        message: "Internal server error",
+      });
+    }
+  }
+};
+
+const deleteUserController = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
+
+    await deleteUserService(id);
+
+    res.status(200).json();
   } catch (error) {
     if (error instanceof AppError) {
       handleError(error, res);
@@ -84,4 +104,5 @@ export {
   listUsersController,
   listProfileCarsController,
   updateUserController,
+  deleteUserController,
 };
