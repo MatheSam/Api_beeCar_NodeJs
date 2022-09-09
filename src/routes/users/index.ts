@@ -26,7 +26,12 @@ usersRouter.get(
   listProfileCarsController
 );
 
-usersRouter.patch("", ensureAuthenticationMiddleware, updateUserController);
+usersRouter.patch(
+  "",
+  ensureAuthenticationMiddleware,
+  validationMiddleware(userSchema),
+  updateUserController
+);
 
 usersRouter.delete("", ensureAuthenticationMiddleware, deleteUserController);
 

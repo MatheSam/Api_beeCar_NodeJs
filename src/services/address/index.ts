@@ -28,4 +28,27 @@ const createAddressService = async (
   return newAddress;
 };
 
-export { createAddressService };
+const updateAddressService = async (
+  idAddress: string,
+  address: IAddressRequest
+): Promise<Addresses> => {
+  const addressRepository = AppDataSource.getRepository(Addresses);
+
+  const aim = await addressRepository.findOne({
+    where: {
+      id: idAddress,
+    },
+  });
+
+  if (!aim) {
+    throw new AppError("User not found");
+  }
+
+  const newAddress = { ...aim, ...address };
+
+  await addressRepository.save(newAddress);
+
+  return newAddress;
+};
+
+export { createAddressService, updateAddressService };
