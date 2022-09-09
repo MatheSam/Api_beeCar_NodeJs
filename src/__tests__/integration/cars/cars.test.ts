@@ -3,14 +3,9 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
-import {
-  mockedLoginAdm,
-  mockedLoginUser,
-  mockedUser,
-  mockedUserAdm,
-} from "../../mocks";
 
-describe("/profile", () => {
+
+describe("/cars", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
