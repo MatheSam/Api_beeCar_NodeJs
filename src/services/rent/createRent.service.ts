@@ -31,7 +31,8 @@ const createRentService = async (
     initialHour,
     finalDate,
     finalHour,
-    car.categories.pricePerDay
+    car.categories.pricePerDay,
+    car.categories.pricePerMouth
   );
 
   const rent = rentRepository.create({

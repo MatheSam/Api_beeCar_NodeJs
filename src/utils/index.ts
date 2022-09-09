@@ -24,7 +24,8 @@ export const calcRent = (
   initialHour: string,
   finalDate: string,
   finalHour: string,
-  rentPerDay: number
+  rentPerDay: number,
+  retnPerMonth: number
 ): number => {
   const date1 = new Date(initialDate);
   const hourAll1: string[] = initialHour.split(":");
@@ -40,9 +41,17 @@ export const calcRent = (
   date2.setHours(hour2, minutes2);
 
   const valuePerDay: number = rentPerDay / 86400000;
+  const valuePerMonth: number = retnPerMonth / 2628000000;
   const range: number = +date2 - +date1;
 
-  const result: number = valuePerDay * range;
+  if (range >= 2628000000) {
+    const result: number = valuePerMonth * range;
+    console.log("+30dias");
+    return +result.toFixed(2);
+  } else {
+    const result: number = valuePerDay * range;
+    console.log("-30");
 
-  return +result.toFixed(2);
+    return +result.toFixed(2);
+  }
 };
