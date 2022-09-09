@@ -18,7 +18,7 @@ Além disso, o usuário poderá cadastrar um ou mais cartões de crédito, visua
 
 # Rotas da BeeCar
 
-URL Base: https://exemplodeurlbase.com/
+URL Base: https://beecarrent.herokuapp.com/
 
 # 👤 /profile
 
@@ -139,14 +139,15 @@ Lista todos os carros alugados pelo usuário (histórico).
 Retorno esperado (200):
 
 ```json
-"cars": [
-	{		"id": "45546545",
+"cars":
+[
+  { "id": "45546545",
 		"todos": "os dados"
 	},
 	{
-		"id": "45546545",
-		"todos": "os dados"
-		}
+    "id": "45546545",
+    "todos": "os dados"
+  }
 ]
 ```
 
