@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: api-beecar
+    build: .
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+
+  db:
+    container_name: db-beecar
+    image: postgres:latest
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB}
