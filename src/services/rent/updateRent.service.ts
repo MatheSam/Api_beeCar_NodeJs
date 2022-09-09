@@ -23,7 +23,7 @@ const updateRentService = async (
 
   const trueRent = await rentRepository.findOneBy({ id: rentId });
 
-  if (!trueRent && trueRent!.finalDate < now) {
+  if (!trueRent || new Date(trueRent!.finalDate) < now) {
     throw new AppError("Rent expired or not found", 404);
   }
 
