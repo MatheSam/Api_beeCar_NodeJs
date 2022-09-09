@@ -89,4 +89,31 @@ const listProfileCarsService = async (id: string) => {
   return listOfCars;
 };
 
-export { createUserService, listUsersService, listProfileCarsService };
+const updateUserService = async (id: string, userData: IUserRequest) => {
+  const userRepository = AppDataSource.getRepository(Users);
+
+  const aim = await userRepository.findOne({
+    where: {
+      id,
+    },
+  });
+
+  if (!aim) {
+    throw new AppError("User not found");
+  }
+
+  userData.password = await hash(userData.password, 10);
+
+  const newUser = { ...aim, ...userData };
+
+  await userRepository.save(newUser);
+
+  return newUser;
+};
+
+export {
+  createUserService,
+  listUsersService,
+  listProfileCarsService,
+  updateUserService,
+};

@@ -3,6 +3,7 @@ import {
   createUserController,
   listProfileCarsController,
   listUsersController,
+  updateUserController,
 } from "../../controllers/users";
 import { ensureAuthenticationMiddleware } from "../../middlewares/ensureAuthenticationMiddleware";
 import isOwnerMiddleware from "../../middlewares/isOwner.middleware";
@@ -25,6 +26,14 @@ usersRouter.get(
   isOwnerMiddleware,
   listProfileCarsController
 );
+
+usersRouter.patch(
+  "",
+  ensureAuthenticationMiddleware,
+  isOwnerMiddleware,
+  updateUserController
+);
+
 usersRouter.delete("");
 
 export default usersRouter;
