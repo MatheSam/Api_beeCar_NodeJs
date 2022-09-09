@@ -2,7 +2,11 @@ import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
 import { AppError } from "../../errors/AppError";
 import { handleError } from "../../middlewares/errors.mid";
-import { createUserService, listUsersService } from "../../services/users";
+import {
+  createUserService,
+  listProfileCarsService,
+  listUsersService,
+} from "../../services/users";
 
 const createUserController = async (req: Request, res: Response) => {
   try {
@@ -37,4 +41,21 @@ const listUsersController = async (req: Request, res: Response) => {
   }
 };
 
-export { createUserController, listUsersController };
+const listProfileCarsController = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
+    const cars = await listProfileCarsService(id);
+    return res.json(instanceToPlain(cars));
+  } catch (error) {
+    if (error instanceof AppError) {
+      handleError(error, res);
+    } else {
+      return res.status(500).json({
+        status: "error",
+        message: "Internal server error",
+      });
+    }
+  }
+};
+
+export { createUserController, listUsersController, listProfileCarsController };
