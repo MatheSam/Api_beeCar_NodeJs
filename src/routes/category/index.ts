@@ -13,8 +13,9 @@ export const categoryRouter = Router();
 
 categoryRouter.post(
   "",
-  userIsAdmMiddleware,
   ensureAuthenticationMiddleware,
+  userIsAdmMiddleware,
+
   createCategoryController
 );
 categoryRouter.get("", listCategoryController);
