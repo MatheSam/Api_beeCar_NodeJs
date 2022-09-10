@@ -6,7 +6,8 @@ import createCarService from "../../services/cars/createCar.service";
 
 const createCarController = async (req: Request, res: Response) => {
   try {
-    const carCreated = await createCarService(req.body);
+    const image = req.upload.img;
+    const carCreated = await createCarService(image, req.body);
     return res.status(201).json(carCreated);
   } catch (error) {
     if (error instanceof AppError) {

@@ -7,6 +7,9 @@ declare global {
         isAdm: boolean;
         id: string;
       };
+      upload: {
+        img: string;
+      };
     }
   }
 }
