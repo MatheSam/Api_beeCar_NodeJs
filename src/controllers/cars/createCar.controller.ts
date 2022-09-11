@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { AppError } from "../../errors/AppError";
-import { ICarsRequest } from "../../interfaces/cars";
 import { handleError } from "../../middlewares/errors.mid";
 import createCarService from "../../services/cars/createCar.service";
 

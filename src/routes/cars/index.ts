@@ -11,7 +11,7 @@ export const carsRouter = Router();
 carsRouter.post("", ensureAuthenticationMiddleware, createCarController);
 carsRouter.get("", listCarsController);
 carsRouter.get("/:id", listSpecificCarController);
-carsRouter.patch("/:id", updateCarController);
+carsRouter.patch("/:id", ensureAuthenticationMiddleware, updateCarController);
 carsRouter.delete(
   "/:id",
   ensureAuthenticationMiddleware,
