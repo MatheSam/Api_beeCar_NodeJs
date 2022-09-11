@@ -20,7 +20,7 @@ const updateCategoryService = async (
     pricePerWeekend,
     pricePeryear,
     type,
-    airCondioting,
+    airConditioning,
   } = data;
 
   if (!category) {
@@ -28,19 +28,19 @@ const updateCategoryService = async (
   }
 
   const newCategory = {
-    id:              id,
-    name:            name || category.name,
-    automatic:       automatic || category.automatic,
-    directionType:   directionType || category.directionType,
-    powerWindows:    powerWindows || category.powerWindows,
-    pricePerDay:     pricePerDay || category.pricePerDay,
-    pricePerMouth:   pricePerMouth || category.pricePerMouth,
+    id: id,
+    name: name || category.name,
+    automatic: automatic || category.automatic,
+    directionType: directionType || category.directionType,
+    powerWindows: powerWindows || category.powerWindows,
+    pricePerDay: pricePerDay || category.pricePerDay,
+    pricePerMouth: pricePerMouth || category.pricePerMouth,
     pricePerWeekend: pricePerWeekend || category.pricePerWeekend,
-    pricePeryear:    pricePeryear || category.pricePeryear,
-    type:            type || category.type,
-    airCondioting:   airCondioting || category.airCondioting,
-    isActive:        category.isActive,
-    cars:            category.cars
+    pricePeryear: pricePeryear || category.pricePeryear,
+    type: type || category.type,
+    airConditioning: airConditioning || category.airConditioning,
+    isActive: category.isActive,
+    cars: category.cars,
   };
 
   await categoryRepository.save(newCategory);

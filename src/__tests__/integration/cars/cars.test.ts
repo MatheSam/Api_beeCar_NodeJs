@@ -3,7 +3,15 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
-
+import {
+  mockedAdmin,
+  mockedCars,
+  mockedCarsUpdated,
+  mockedCategory,
+  mockedLoginAdm,
+  mockedLoginUser,
+  mockedUser,
+} from "../../mocks";
 
 describe("/cars", () => {
   let connection: DataSource;
@@ -24,97 +32,129 @@ describe("/cars", () => {
     await connection.destroy();
   });
 
-  test("POST /profile - deve ser capaz de criar um novo usuário", async () => {
-    const response = await request(app).post("/profile").send(mockedUser);
+  test("POST /cars - deve ser capaz de criar um novo carro", async () => {
+    await request(app).post("/profile").send(mockedAdmin);
 
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("name");
-    expect(response.body).toHaveProperty("birthDate");
-    expect(response.body).toHaveProperty("cpf");
-    expect(response.body).toHaveProperty("age");
-    expect(response.body).toHaveProperty("email");
-    expect(response.body).toHaveProperty("isAdm");
-    expect(response.body).toHaveProperty("isActive");
-    expect(response.body).not.toHaveProperty("password");
-    expect(response.body.name).toEqual("Juarez");
-    expect(response.body.email).toEqual("juarez@mail.com");
-    expect(response.body.cpf).toEqual("15865335683");
-    expect(response.body.isActive).toEqual(true);
-    expect(response.body.isAdm).toEqual(false);
+    const adminLoginResponse = await request(app)
+      .post("/login")
+      .send(mockedLoginAdm);
+
+    await request(app)
+      .post("/category")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockedCategory);
+
+    const response = await request(app)
+      .post("/cars")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockedCars);
+
+    expect(response.body).toHaveProperty("color");
+    expect(response.body).toHaveProperty("model");
+    expect(response.body).toHaveProperty("fuel");
+    expect(response.body).toHaveProperty("year");
+    expect(response.body).toHaveProperty("brand");
     expect(response.status).toBe(201);
   });
 
-  test("POST /profile - não deve ser capaz de criar um usuário que já existe", async () => {
-    const response = await request(app).post("/profile").send(mockedUser);
+  test("POST /cars - não deve ser capaz de criar um carro que já existe", async () => {
+    const adminLoginResponse = await request(app)
+      .post("/login")
+      .send(mockedLoginAdm);
+
+    const response = await request(app)
+      .post("/cars")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockedCars);
 
     expect(response.body).toHaveProperty("message");
     expect(response.status).toBe(400);
   });
 
-  test("GET /profile - Must be able to list users", async () => {
-    await request(app).post("/users").send(mockedUserAdm);
+  test("POST /cars - Não deve ser capaz de criar um novo carro sem autenticação", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedLoginAdm);
     const response = await request(app)
-      .get("/profile")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
-
-    expect(response.body).toHaveLength(2);
-  });
-
-  test("GET /profile - não deve ser capaz de listar usuários sem autenticação", async () => {
-    const response = await request(app).get("/profile");
+      .post("/cars")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockedCars);
 
     expect(response.body).toHaveProperty("message");
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
   });
 
-  test("GET /profile - não deve ser capaz de listar usuários se não for admnistrador", async () => {
-    const userLoginResponse = await request(app)
+  test("GET /cars - Deve ser capaz de listar carros", async () => {
+    const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedLoginUser);
     const response = await request(app)
-      .get("/profile")
-      .set("Authorization", `Bearer ${userLoginResponse.body.token}`);
+      .get("/cars")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
-    expect(response.body).toHaveProperty("message");
-    expect(response.status).toBe(403);
+    expect(response.body).toHaveLength(1);
   });
 
-  test("DELETE /profile - não deve ser capaz de realizar um soft delete sem autenticação", async () => {
-    const adminsLoginResponse = await request(app)
-      .post("/login")
-      .send(mockedLoginAdm);
+  test("GET /cars - Deve ser capaz de listar um carro especifico", async () => {
+    const cars = await request(app).get("/cars");
 
-    const userTobeDeleted = await request(app)
-      .get("/users")
-      .set("Authorization", `Bearer ${adminsLoginResponse.body.token}`);
+    const response = await request(app).get(`/cars/${cars.body[0].id}`);
 
-    const response = await request(app).delete(
-      `/users/${userTobeDeleted.body[0].id}`
-    );
+    const placa = cars.body[0].licensePlate;
 
-    expect(response.body).toHaveProperty("message");
-    expect(response.status).toBe(401);
+    expect(response.body.licensePlate).toEqual(placa);
   });
 
-  test("DELETE /profile -  Must be able to soft delete user", async () => {
-    await request(app).post("/users").send(mockedUserAdm);
+  test("PATCH /cars - Deve ser capaz de atualizar um carro especifico", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedLoginAdm);
-    const UserTobeDeleted = await request(app)
-      .get("/profile")
+
+    const carsTobeUpdated = await request(app)
+      .get("/cars")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     const response = await request(app)
-      .delete(`/users/${UserTobeDeleted.body[0].id}`)
+      .patch(`/cars/${carsTobeUpdated.body[0].id}`)
+      .send(mockedCarsUpdated)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
-    const findUser = await request(app)
-      .get("/users")
+
+    expect(response.status).toBe(200);
+    expect(response.body.km).toEqual(8000);
+  });
+
+  test("DELETE /cars - Deve ser capaz de realizar um soft delete em um carro", async () => {
+    //await request(app).post("/cars").send(mockedCars);
+    const adminLoginResponse = await request(app)
+      .post("/login")
+      .send(mockedLoginAdm);
+    const carsToBeDeleted = await request(app)
+      .get("/cars")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    const response = await request(app)
+      .delete(`/cars/${carsToBeDeleted.body[0].id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+    const findCar = await request(app)
+      .get("/cars")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
     expect(response.status).toBe(204);
-    expect(findUser.body[0].isActive).toBe(false);
+    expect(findCar.body[0].isActive).toBe(false);
   });
+
+  /*   test("DELETE /cars - não deve ser capaz de realizar um soft delete sem autenticação", async () => {
+    const adminLoginResponse = await request(app)
+      .post("/login")
+      .send(mockedLoginAdm);
+
+    const carsToBeDeleted = await request(app)
+      .get("/cars")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    const response = await request(app)
+      .delete(`/cars/${carsToBeDeleted.body[0].id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    expect(response.status).toBe(401);
+  }); */
 });

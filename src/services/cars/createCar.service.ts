@@ -23,11 +23,10 @@ const createCarService = async ({
   const carAlreadyExists = await carRepository.findOneBy({ licensePlate });
 
   if (carAlreadyExists) {
-    throw new AppError("This car already exists in our system");
+    throw new AppError("This car already exists in our system", 400);
   }
 
   const category = await categoryRepository.findOneBy({ name: categoryName });
-
 
   if (!category) {
     throw new AppError("Category not found", 404);

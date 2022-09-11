@@ -14,7 +14,7 @@ const createUserController = async (req: Request, res: Response) => {
   try {
     const user = req.body;
     const newUser = await createUserService(user);
-    return res.status(200).json(instanceToPlain(newUser));
+    return res.status(201).json(instanceToPlain(newUser));
   } catch (error) {
     if (error instanceof AppError) {
       handleError(error, res);
@@ -47,7 +47,8 @@ const listProfileCarsController = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
     const cars = await listProfileCarsService(id);
-    return res.json(instanceToPlain(cars));
+    return res.json(cars);
+    //return res.json(instanceToPlain(cars));
   } catch (error) {
     if (error instanceof AppError) {
       handleError(error, res);
@@ -86,7 +87,7 @@ const deleteUserController = async (req: Request, res: Response) => {
 
     await deleteUserService(id);
 
-    res.status(200).json();
+    return res.status(204).json({ message: "User deleted with successful" });
   } catch (error) {
     if (error instanceof AppError) {
       handleError(error, res);

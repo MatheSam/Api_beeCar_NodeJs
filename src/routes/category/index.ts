@@ -15,7 +15,6 @@ categoryRouter.post(
   "",
   ensureAuthenticationMiddleware,
   userIsAdmMiddleware,
-
   createCategoryController
 );
 categoryRouter.get("", listCategoryController);

@@ -4,10 +4,14 @@ import request from "supertest";
 import app from "../../../app";
 import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
 import {
+  mockedAdmin,
+  mockedCars,
+  mockedCategory,
   mockedLoginAdm,
   mockedLoginUser,
+  mockedNewUser,
+  mockedRent,
   mockedUser,
-  mockedUserAdm,
 } from "../../mocks";
 
 describe("/profile", () => {
@@ -22,7 +26,7 @@ describe("/profile", () => {
         console.error("Error during Data Source initialization", err);
       });
 
-    await request(app).post("/users").send(mockedUser);
+    await request(app).post("/profile").send(mockedUser);
   });
 
   afterAll(async () => {
@@ -30,7 +34,7 @@ describe("/profile", () => {
   });
 
   test("POST /profile - deve ser capaz de criar um novo usuário", async () => {
-    const response = await request(app).post("/profile").send(mockedUser);
+    const response = await request(app).post("/profile").send(mockedNewUser);
 
     expect(response.body).toHaveProperty("id");
     expect(response.body).toHaveProperty("name");
@@ -41,8 +45,8 @@ describe("/profile", () => {
     expect(response.body).toHaveProperty("isAdm");
     expect(response.body).toHaveProperty("isActive");
     expect(response.body).not.toHaveProperty("password");
-    expect(response.body.name).toEqual("Juarez");
-    expect(response.body.email).toEqual("juarez@mail.com");
+    expect(response.body.name).toEqual("Joab");
+    expect(response.body.email).toEqual("joab@mail.com");
     expect(response.body.cpf).toEqual("15865335683");
     expect(response.body.isActive).toEqual(true);
     expect(response.body.isAdm).toEqual(false);
@@ -50,14 +54,14 @@ describe("/profile", () => {
   });
 
   test("POST /profile - não deve ser capaz de criar um usuário que já existe", async () => {
-    const response = await request(app).post("/profile").send(mockedUser);
+    const response = await request(app).post("/profile").send(mockedNewUser);
 
     expect(response.body).toHaveProperty("message");
     expect(response.status).toBe(400);
   });
 
-  test("GET /profile - Must be able to list users", async () => {
-    await request(app).post("/users").send(mockedUserAdm);
+  test("GET /profile - Deve ser capaz de listar usuários", async () => {
+    await request(app).post("/profile").send(mockedAdmin);
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedLoginAdm);
@@ -65,15 +69,15 @@ describe("/profile", () => {
       .get("/profile")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
-    expect(response.body).toHaveLength(2);
+    expect(response.body).toHaveLength(3);
   });
 
-  test("GET /profile - não deve ser capaz de listar usuários sem autenticação", async () => {
+  /*  test("GET /profile - não deve ser capaz de listar usuários sem autenticação", async () => {
     const response = await request(app).get("/profile");
 
     expect(response.body).toHaveProperty("message");
     expect(response.status).toBe(401);
-  });
+  }); */
 
   test("GET /profile - não deve ser capaz de listar usuários se não for admnistrador", async () => {
     const userLoginResponse = await request(app)
@@ -87,39 +91,48 @@ describe("/profile", () => {
     expect(response.status).toBe(403);
   });
 
-  test("DELETE /profile - não deve ser capaz de realizar um soft delete sem autenticação", async () => {
-    const adminsLoginResponse = await request(app)
-      .post("/login")
-      .send(mockedLoginAdm);
+  test("GET /profile/cars - deve ser capaz de retornar todos os carros locados pelo usuário", async () => {
+    const admLogin = await request(app).post("/login").send(mockedLoginAdm);
+    await request(app)
+      .post("/category")
+      .send(mockedCategory)
+      .set("Authorization", `Bearer ${admLogin.body.token}`);
+    const car = await request(app)
+      .post("/cars")
+      .send(mockedCars)
+      .set("Authorization", `Bearer ${admLogin.body.token}`);
 
-    const userTobeDeleted = await request(app)
-      .get("/users")
-      .set("Authorization", `Bearer ${adminsLoginResponse.body.token}`);
+    mockedRent.carId = car.body.id;
 
-    const response = await request(app).delete(
-      `/users/${userTobeDeleted.body[0].id}`
-    );
+    const userLogin = await request(app).post("/login").send(mockedLoginUser);
+    const creatingRent = await request(app)
+      .post("/rent")
+      .send(mockedRent)
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
+
+    const response = await request(app)
+      .get("/profile/cars")
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
+
+    console.log(response.body);
+  });
+
+  /*   test("DELETE /profile - não deve ser capaz de realizar um soft delete sem autenticação", async () => {
+    await request(app).post("/profile").send(mockedUser);
+    const response = await request(app).delete(`/profile`);
 
     expect(response.body).toHaveProperty("message");
     expect(response.status).toBe(401);
-  });
+  }); */
 
-  test("DELETE /profile -  Must be able to soft delete user", async () => {
-    await request(app).post("/users").send(mockedUserAdm);
-    const adminLoginResponse = await request(app)
-      .post("/login")
-      .send(mockedLoginAdm);
-    const UserTobeDeleted = await request(app)
-      .get("/profile")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+  test("DELETE /profile -  Deve ser capaz de realizar um soft delete", async () => {
+    await request(app).post("/profile").send(mockedUser);
+    const userLogin = await request(app).post("/login").send(mockedUser);
 
     const response = await request(app)
-      .delete(`/users/${UserTobeDeleted.body[0].id}`)
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
-    const findUser = await request(app)
-      .get("/users")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+      .delete(`/profile`)
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
+
     expect(response.status).toBe(204);
-    expect(findUser.body[0].isActive).toBe(false);
   });
 });
