@@ -18,7 +18,7 @@ const listCarsOfCategoryService = async (id: string) => {
     throw new AppError("Car not found", 404);
   }
 
-  return categoryRepository;
+  return carsOfCategory;
 };
 
 export default listCarsOfCategoryService;
