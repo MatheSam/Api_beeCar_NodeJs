@@ -14,6 +14,8 @@ const listCarsOfCategoryService = async (id: string) => {
     },
   });
 
+  console.log(carsOfCategory)
+
   if (!carsOfCategory) {
     throw new AppError("Car not found", 404);
   }
