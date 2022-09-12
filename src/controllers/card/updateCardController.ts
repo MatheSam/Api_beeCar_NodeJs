@@ -8,9 +8,9 @@ const updateCardController = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { cardNumber, validate, name } = req.body;
 
-    await updateCardService(id, { cardNumber, validate, name });
+    const card = await updateCardService(id, { cardNumber, validate, name });
 
-    return res.status(201).json({ message: "card update" });
+    return res.status(200).json({ card, message: "CardUpdated" });
   } catch (err) {
     if (err instanceof AppError) {
       handleError(err, res);

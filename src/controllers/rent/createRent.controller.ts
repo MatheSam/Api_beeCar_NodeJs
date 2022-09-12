@@ -7,7 +7,6 @@ import createRentService from "../../services/rent/createRent.service";
 const createRentController = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
-    console.log(req.body);
 
     const rent = await createRentService(id, req.body);
     return res.status(201).json(instanceToPlain(rent));

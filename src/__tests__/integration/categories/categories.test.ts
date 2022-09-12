@@ -6,6 +6,7 @@ import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
 import {
   mockedAdmin,
   mockedAttCategory,
+  mockedCars,
   mockedCategory,
   mockedLoginAdm,
   mockedLoginUser,
@@ -62,12 +63,12 @@ describe("/category", () => {
     expect(response.status).toBe(400);
   });
 
-  /*   test("POST /category - Não deve ser capaz de criar uma categoria sem autenticação", async () => {
+  test("POST /category - Não deve ser capaz de criar uma categoria sem autenticação", async () => {
     const response = await request(app).post("/category").send(mockedCategory);
 
     expect(response.body).toHaveProperty("message");
     expect(response.status).toBe(401);
-  }); */
+  });
 
   test("POST /category -  Não deve ser capaz de criar uma categoria sem ser administrador", async () => {
     const userLoginResponse = await request(app)
@@ -88,22 +89,34 @@ describe("/category", () => {
     expect(response.status).toBe(200);
   });
 
-  /*   test("GET /category/:id/cars -  Deve ser capaz de listar todos os carros de uma categoria especifica", async () => {
+  test("GET /category/:id/cars -  Deve ser capaz de listar todos os carros de uma categoria especifica", async () => {
+    const adminLoginResponse = await request(app)
+      .post("/login")
+      .send(mockedLoginAdm);
+
+    await request(app)
+      .post("/cars")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockedCars);
+
     const category = await request(app).get("/category");
 
     const response = await request(app).get(
       `/category/${category.body[0].id}/cars`
     );
 
+    expect(response.body.cars).toHaveLength(1);
+    expect(response.status).toBe(200);
   });
 
   test("GET /category/:id/cars -  Não deve ser capaz de listar os carros de uma categoria que não existe", async () => {
     const response = await request(app).get(
       `/category/13970660-5dbe-423a-9a9d-5c23b37943cf/cars`
     );
+
     expect(response.body).toHaveProperty("message");
     expect(response.status).toBe(404);
-  }); */
+  });
 
   test("PATCH /category/:id - Deve ser capaz de atualizar dados especificos de uma categoria", async () => {
     const adminLoginResponse = await request(app)

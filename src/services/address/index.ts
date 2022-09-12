@@ -11,6 +11,17 @@ const createAddressService = async (
   const addressRepository = AppDataSource.getRepository(Addresses);
   const userRepository = AppDataSource.getRepository(Users);
 
+  const verifingUser = await userRepository.findOneBy({ id: idUser });
+
+  if (Boolean(verifingUser?.address)) {
+    throw new AppError(
+      "User already have address registered, please delete your address or do an update",
+      401
+    );
+  }
+
+  //const userAlreadyHaveAddress = verifingUser.find(el => el.add)
+
   const newAddress = addressRepository.create({ ...address });
 
   await addressRepository.save(newAddress);
@@ -29,24 +40,28 @@ const createAddressService = async (
 };
 
 const updateAddressService = async (
-  idAddress: string,
+  idUser: string,
   address: IAddressRequest
 ): Promise<Addresses> => {
+  const userRepository = AppDataSource.getRepository(Users);
   const addressRepository = AppDataSource.getRepository(Addresses);
 
-  const aim = await addressRepository.findOne({
+  const user = await userRepository.findOneBy({ id: idUser });
+
+  const userAddress = await addressRepository.findOne({
     where: {
-      id: idAddress,
+      id: user?.address?.id,
     },
   });
 
-  if (!aim) {
-    throw new AppError("Address not found");
+  if (!userAddress) {
+    throw new AppError("Address not found", 404);
   }
 
-  const newAddress = { ...aim, ...address };
-
-  await addressRepository.save(newAddress);
+  const newAddress = await addressRepository.save({
+    ...userAddress,
+    ...address,
+  });
 
   return newAddress;
 };

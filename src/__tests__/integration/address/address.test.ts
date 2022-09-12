@@ -49,7 +49,7 @@ describe("/category", () => {
       .send(mockedAddress)
       .set("Authorization", `Bearer ${userLogin.body.token}`);
 
-    expect(response.status).toEqual(400);
+    expect(response.status).toEqual(401);
   });
 
   test("PATCH /profile/address - Deve ser capaz de atualizar um endereço", async () => {
@@ -65,6 +65,6 @@ describe("/category", () => {
       .set("Authorization", `Bearer ${admLogin.body.token}`);
 
     expect(response.status).toEqual(200);
-    expect(response.body[0].address.number).toEqual(50);
+    expect(response.body[0].address.number).toEqual("50");
   });
 });

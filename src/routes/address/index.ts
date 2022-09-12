@@ -18,6 +18,5 @@ addressRouter.post(
 addressRouter.patch(
   "",
   ensureAuthenticationMiddleware,
-  validationMiddleware(addressSchema),
   updateAddressController
 );

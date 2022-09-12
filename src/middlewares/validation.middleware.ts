@@ -5,9 +5,7 @@ const validationMiddleware =
   (schema: AnySchema) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let data;
-
-      data = req.body;
+      const data = req.body;
 
       await schema.validate(data);
 

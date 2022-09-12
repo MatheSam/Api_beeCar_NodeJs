@@ -48,7 +48,6 @@ const listProfileCarsController = async (req: Request, res: Response) => {
     const { id } = req.user;
     const cars = await listProfileCarsService(id);
     return res.json(cars);
-    //return res.json(instanceToPlain(cars));
   } catch (error) {
     if (error instanceof AppError) {
       handleError(error, res);
@@ -68,7 +67,7 @@ const updateUserController = async (req: Request, res: Response) => {
 
     const newUser = await updateUserService(id, userData);
 
-    res.json(instanceToPlain(newUser));
+    return res.json(instanceToPlain(newUser));
   } catch (error) {
     if (error instanceof AppError) {
       handleError(error, res);

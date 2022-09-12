@@ -47,7 +47,7 @@ export const mockedLoginAdm: ILogin = {
 };
 
 export const mockedCars: ICarsRequest = {
-  licensePlate: "456875",
+  licensePlate: "1234567",
   color: "black",
   model: "New Fiesta",
   fuel: "G",
@@ -57,7 +57,6 @@ export const mockedCars: ICarsRequest = {
   km: 5000,
   hp: 125,
   price: 35000,
-  img: "../../../",
 };
 
 export const mockedCarsUpdated = {
@@ -72,7 +71,6 @@ export const mockedCategory: ICategoryRequest = {
   directionType: "eletro-hidraulica",
   powerWindows: true,
   pricePerDay: 500,
-  pricePerWeekend: 890,
   pricePerMouth: 1990,
   pricePeryear: 12000,
 };
@@ -97,7 +95,7 @@ export const mockedAddress: IAddressRequest = {
   city: "Jacundá",
   district: "Caiobá",
   number: "420",
-  state: "Roraima",
+  state: "RR",
   zipCode: "84520060",
 };
 
@@ -112,13 +110,13 @@ export const mockedCard: ICardRequest = {
 };
 
 export const mockedAttCard = {
-  validate: "10/10/2022",
+  validate: "10/10/2025",
 };
 
 export const mockedCnh: ICnhRequest = {
   number: "13245687900",
   type: "AB",
-  validate: "10/09/2022",
+  validate: "10/09/2025",
 };
 
 export const mockedAttCnh = {

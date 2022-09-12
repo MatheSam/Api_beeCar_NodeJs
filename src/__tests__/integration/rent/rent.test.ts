@@ -38,6 +38,7 @@ describe("/rent", () => {
   test("POST /rent - Deve ser capaz de gerar um aluguel", async () => {
     const userLogin = await request(app).post("/login").send(mockedLoginUser);
     const admLogin = await request(app).post("/login").send(mockedLoginAdm);
+
     await request(app)
       .post("/profile/card")
       .send(mockedCard)
@@ -73,6 +74,7 @@ describe("/rent", () => {
   test("PATCH /rent/:id - Deve ser capaz de atualizar uma locação especifica", async () => {
     const userLogin = await request(app).post("/login").send(mockedLoginUser);
     const admLogin = await request(app).post("/login").send(mockedLoginAdm);
+
     const rents = await request(app)
       .get("/rent")
       .set("Authorization", `Bearer ${admLogin.body.token}`);
@@ -81,9 +83,8 @@ describe("/rent", () => {
       .patch(`/rent/${rents.body[0].id}`)
       .send(mockedAttRent)
       .set("Authorization", `Bearer ${userLogin.body.token}`);
-    console.log(response.body);
 
-    expect(response.body.finalHour).toEqual("15:45:00");
+    expect(response.body.update.finalHour).toEqual("15:45");
     expect(response.status).toEqual(200);
   });
 });

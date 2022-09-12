@@ -124,7 +124,6 @@ describe("/cars", () => {
   });
 
   test("DELETE /cars - Deve ser capaz de realizar um soft delete em um carro", async () => {
-    //await request(app).post("/cars").send(mockedCars);
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedLoginAdm);
@@ -138,11 +137,12 @@ describe("/cars", () => {
     const findCar = await request(app)
       .get("/cars")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
     expect(response.status).toBe(204);
     expect(findCar.body[0].isActive).toBe(false);
   });
 
-  /*   test("DELETE /cars - não deve ser capaz de realizar um soft delete sem autenticação", async () => {
+  test("DELETE /cars - não deve ser capaz de realizar um soft delete sem autenticação", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedLoginAdm);
@@ -151,10 +151,10 @@ describe("/cars", () => {
       .get("/cars")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
-    const response = await request(app)
-      .delete(`/cars/${carsToBeDeleted.body[0].id}`)
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+    const response = await request(app).delete(
+      `/cars/${carsToBeDeleted.body[0].id}`
+    );
 
     expect(response.status).toBe(401);
-  }); */
+  });
 });

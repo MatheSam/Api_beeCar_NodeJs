@@ -12,7 +12,14 @@ const createCardService = async (
   const cardRepository = AppDataSource.getRepository(Cards);
 
   const user = await usersRepository.findOneBy({ id: userId });
- 
+
+  const cardAlreadyExists = await cardRepository.findOne({
+    where: { cardNumber, validate, name },
+  });
+
+  if (cardAlreadyExists) {
+    throw new AppError("Card already exists", 400);
+  }
 
   const card = await cardRepository.save({
     cardNumber,

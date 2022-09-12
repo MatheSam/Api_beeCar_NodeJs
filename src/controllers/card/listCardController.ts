@@ -9,7 +9,6 @@ const listCardController = async (req: Request, res: Response) => {
 
     const card = await listCardService(id);
 
-    console.log(card);
     return res.status(200).send(card);
   } catch (err) {
     if (err instanceof AppError) {
