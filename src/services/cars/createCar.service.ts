@@ -4,19 +4,21 @@ import { Categories } from "../../entities/category.entity";
 import { AppError } from "../../errors/AppError";
 import { ICarsRequest } from "../../interfaces/cars";
 
-const createCarService = async ({
-  licensePlate,
-  brand,
-  categoryName,
-  color,
-  fuel,
-  hp,
-  img,
-  km,
-  model,
-  price,
-  year,
-}: ICarsRequest): Promise<Cars> => {
+const createCarService = async (
+  image: string,
+  {
+    licensePlate,
+    brand,
+    categoryName,
+    color,
+    fuel,
+    hp,
+    km,
+    model,
+    price,
+    year,
+  }: ICarsRequest
+): Promise<Cars> => {
   const carRepository = AppDataSource.getRepository(Cars);
   const categoryRepository = AppDataSource.getRepository(Categories);
 
@@ -27,7 +29,6 @@ const createCarService = async ({
   }
 
   const category = await categoryRepository.findOneBy({ name: categoryName });
-
 
   if (!category) {
     throw new AppError("Category not found", 404);
@@ -40,7 +41,7 @@ const createCarService = async ({
     color,
     fuel,
     hp,
-    img,
+    img: image,
     km,
     model,
     price,
