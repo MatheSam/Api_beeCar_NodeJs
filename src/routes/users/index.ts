@@ -20,18 +20,14 @@ usersRouter.get(
   userIsAdmMiddleware,
   listUsersController
 );
+
 usersRouter.get(
-  "/cars",
+  "/rents",
   ensureAuthenticationMiddleware,
   listProfileCarsController
 );
 
-usersRouter.patch(
-  "",
-  ensureAuthenticationMiddleware,
-  validationMiddleware(userSchema),
-  updateUserController
-);
+usersRouter.patch("", ensureAuthenticationMiddleware, updateUserController);
 
 usersRouter.delete("", ensureAuthenticationMiddleware, deleteUserController);
 

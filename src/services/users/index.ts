@@ -15,6 +15,12 @@ const createUserService = async ({
 }: IUserRequest): Promise<Users> => {
   const userRepository = AppDataSource.getRepository(Users);
 
+  const alreadyExists = await userRepository.findOneBy({ email });
+
+  if (alreadyExists) {
+    throw new AppError("User already exists", 400);
+  }
+
   const hashedPassword = await hash(password, 10);
 
   const birth = new Date(birthDate);
@@ -46,67 +52,35 @@ const listUsersService = async (): Promise<Users[]> => {
 };
 
 const listProfileCarsService = async (id: string) => {
-  const userRepository = AppDataSource.getRepository(Users);
+  const rentRepository = AppDataSource.getRepository(Rent);
 
-  const findUser = await userRepository.findOneBy({
-    id,
+  const rentedByUser = await rentRepository.find({
+    where: { users: { id } },
   });
 
-  if (!findUser) {
-    throw new AppError("User not found");
+  if (!rentedByUser) {
+    throw new AppError("User dont have a rented car yet", 404);
   }
 
-  const listOfCars = await AppDataSource.getRepository(Rent)
-    .createQueryBuilder("rent")
-    .innerJoinAndSelect("rent.users", "user")
-    .innerJoinAndSelect("playlistSongs.cars", "car")
-    .select([
-      "rent.initialDate",
-      "rent.initialHour",
-      "rent.finalDate",
-      "rent.finalHour",
-      "rent.totalValue",
-      "car.id",
-      "car.licensePlate",
-      "car.color",
-      "car.model",
-      "car.fuel",
-      "car.year",
-      "car.brand",
-      "car.rented",
-      "car.document",
-      "car.isActive",
-      "car.price",
-      "car.km",
-      "car.hp",
-      "car.maintenence",
-      "car.img",
-      "car.categories",
-    ])
-    .where("user.id = :id", { id })
-    .getMany();
-
-  return listOfCars;
+  return rentedByUser;
 };
 
 const updateUserService = async (id: string, userData: IUserRequest) => {
   const userRepository = AppDataSource.getRepository(Users);
 
-  const aim = await userRepository.findOne({
-    where: {
-      id,
-    },
+  const user = await userRepository.findOneBy({
+    id,
   });
 
-  if (!aim) {
-    throw new AppError("User not found");
+  if (!user) {
+    throw new AppError("User not found", 404);
   }
 
-  userData.password = await hash(userData.password, 10);
+  if (userData.password) {
+    userData.password = await hash(userData.password, 10);
+  }
 
-  const newUser = { ...aim, ...userData };
-
-  await userRepository.save(newUser);
+  const newUser = await userRepository.save({ ...user, ...userData });
 
   return newUser;
 };
@@ -122,7 +96,11 @@ const deleteUserService = async (id: string) => {
     throw new AppError("User not Found");
   }
 
-  await userRepository.delete(id);
+  await userRepository.update(id, { isActive: false });
+
+  const updatedUser = await userRepository.findOneBy({ id });
+
+  return updatedUser;
 };
 
 export {

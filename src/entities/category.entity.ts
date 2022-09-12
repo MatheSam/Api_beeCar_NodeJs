@@ -16,7 +16,7 @@ export class Categories {
   type: string;
 
   @Column({ default: true })
-  airCondioting: boolean;
+  airConditioning: boolean;
 
   @Column({ length: 50 })
   directionType: string;
@@ -26,9 +26,6 @@ export class Categories {
 
   @Column({ type: "decimal", precision: 12, scale: 2 })
   pricePerDay: number;
-
-  @Column({ type: "decimal", precision: 12, scale: 2 })
-  pricePerWeekend: number;
 
   @Column({ type: "decimal", precision: 12, scale: 2 })
   pricePerMouth: number;

@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import "express-async-errors";
 import express from "express";
+
 import { addressRouter } from "./routes/address";
 import { cardRouter } from "./routes/card";
 import { carsRouter } from "./routes/cars";
@@ -12,6 +13,7 @@ import usersRouter from "./routes/users";
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/cars", carsRouter);
 app.use("/category", categoryRouter);

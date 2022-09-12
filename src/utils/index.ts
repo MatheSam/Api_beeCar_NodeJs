@@ -1,7 +1,7 @@
-import { date } from "yup";
 import AppDataSource from "../data-source";
 import { Categories } from "../entities/category.entity";
 import { AppError } from "../errors/AppError";
+import * as fs from "fs";
 
 export const categoryReturn = async (categoryName: string) => {
   const categoryRepository = AppDataSource.getRepository(Categories);
@@ -17,6 +17,10 @@ export const categoryReturn = async (categoryName: string) => {
     return categoryReturn;
   }
   return null;
+};
+
+export const deleteUpload = (file: any) => {
+  fs.unlinkSync(file!.path);
 };
 
 export const calcRent = (
@@ -47,8 +51,10 @@ export const calcRent = (
   if (range >= 2628000000) {
     const result: number = valuePerMonth * range;
     return +result.toFixed(2);
-  } else {
+  } else if (finalDate || finalHour) {
     const result: number = valuePerDay * range;
     return +result.toFixed(2);
+  } else {
+    return 0;
   }
 };

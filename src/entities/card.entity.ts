@@ -15,6 +15,6 @@ export class Cards {
   @Column({ length: 50 })
   name: string;
 
-  @ManyToOne(() => Users, { eager: true })
+  @ManyToOne(() => Users)
   user: Users;
 }

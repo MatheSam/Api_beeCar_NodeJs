@@ -42,7 +42,7 @@ export class Users {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToOne(() => Cnh, { eager: true })
+  @OneToOne(() => Cnh, { eager: true, nullable: true, onDelete: "SET NULL" })
   @JoinColumn()
   cnh?: Cnh;
 
@@ -50,7 +50,7 @@ export class Users {
   @JoinColumn()
   address?: Addresses;
 
-  @OneToMany(() => Cards, (card) => card.user)
+  @OneToMany(() => Cards, (card) => card.user, { eager: true })
   cards?: Cards[];
 
   @OneToMany(() => Rent, (rent) => rent.users)

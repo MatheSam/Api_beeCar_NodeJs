@@ -6,7 +6,7 @@ import {
   updateAddressService,
 } from "../../services/address";
 
-const createAddressController = async (req: Request, res: Response) => {
+const updateAddressController = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
 
@@ -27,7 +27,7 @@ const createAddressController = async (req: Request, res: Response) => {
   }
 };
 
-const updateAddressController = async (req: Request, res: Response) => {
+const createAddressController = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
     const address = req.body;

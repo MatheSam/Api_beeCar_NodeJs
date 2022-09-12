@@ -23,7 +23,22 @@ export const createCategoryController = async (req: Request, res: Response) => {
 export const listCategoryController = async (req: Request, res: Response) => {
   try {
     const category = await listCategoriesService();
-    return res.status(201).json(category);
+    return res.status(200).json(category);
+  } catch (error) {
+    if (error instanceof AppError) {
+      return res.status(error.statusCode).send({
+        message: error.message,
+      });
+    }
+  }
+};
+
+export const updateCategoryController = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+    const carsOfCategory = await updateCategoryService(id, data);
+    return res.status(200).json(carsOfCategory);
   } catch (error) {
     if (error instanceof AppError) {
       return res.status(error.statusCode).send({
@@ -39,26 +54,8 @@ export const listCarsOfCategoryController = async (
 ) => {
   try {
     const { id } = req.params;
-    const data = req.body
-    const carsOfCategory = await updateCategoryService(id, data);
-    return res.status(201).json(carsOfCategory);
-  } catch (error) {
-    if (error instanceof AppError) {
-      return res.status(error.statusCode).send({
-        message: error.message,
-      });
-    }
-  }
-};
-
-export const updateCategoryController = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const { id } = req.params;
     const carsOfCategory = await listCarsOfCategoryService(id);
-    return res.status(201).json(carsOfCategory);
+    return res.status(200).json(carsOfCategory);
   } catch (error) {
     if (error instanceof AppError) {
       return res.status(error.statusCode).send({
@@ -68,17 +65,13 @@ export const updateCategoryController = async (
   }
 };
 
-
-export const deleteCategoryController = async (
-  req: Request,
-  res: Response
-) => {
+export const deleteCategoryController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const category = await deleteCategoryService(id);
-    return res.status(201).send({
-      message: "Category deleted successfully"
-    })
+    await deleteCategoryService(id);
+    return res.status(200).send({
+      message: "Category deleted successfully",
+    });
   } catch (error) {
     if (error instanceof AppError) {
       return res.status(error.statusCode).send({
