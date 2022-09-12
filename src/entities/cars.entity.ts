@@ -52,7 +52,7 @@ export class Cars {
   @Column({ default: false })
   maintenence: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   img?: string;
 
   @ManyToOne(() => Categories, { eager: true })

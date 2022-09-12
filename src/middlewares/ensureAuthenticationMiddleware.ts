@@ -33,7 +33,13 @@ const ensureAuthenticationMiddleware = async (
         next();
       }
     );
-  } catch (error) {}
+  } catch (error) {
+    if (error instanceof AppError) {
+      return res.status(error.statusCode).send({
+        message: error.message,
+      });
+    }
+  }
 };
 
 export { ensureAuthenticationMiddleware };

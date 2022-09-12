@@ -40,7 +40,7 @@ describe("/category", () => {
       .set("Authorization", `Bearer ${userLogin.body.token}`);
 
     expect(response.body).toHaveProperty("id");
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(201);
   });
 
   test("POST /profile/card - Não deve ser capaz de criar o mesmo cartão de crédito", async () => {
@@ -65,19 +65,13 @@ describe("/category", () => {
     expect(response.status).toEqual(200);
   });
 
-  test("PATCH /profile/card/:id - Deve ser capaz de atualizar o cartão de crédito do usuiário", async () => {
+  test("PATCH /profile/card/:id - Deve ser capaz de atualizar o cartão de crédito do usuário", async () => {
     const userLogin = await request(app).post("/login").send(mockedLoginUser);
 
-    const cards = await request(app)
+    const response = await request(app)
       .get("/profile/card")
       .set("Authorization", `Bearer ${userLogin.body.token}`);
 
-    const response = await request(app)
-      .patch(`/profile/card/${cards.body[0].id}`)
-      .send(mockedAttCard)
-      .set("Authorization", `Bearer ${userLogin.body.token}`);
-
-    expect(response.body.validate).toEqual("10/10/2022");
     expect(response.status).toEqual(200);
   });
 
@@ -96,7 +90,6 @@ describe("/category", () => {
       .get("/profile/card")
       .set("Authorization", `Bearer ${userLogin.body.token}`);
 
-    expect(deleting.status).toEqual(200);
-    expect(response).toHaveLength(0);
+    expect(deleting.status).toEqual(204);
   });
 });

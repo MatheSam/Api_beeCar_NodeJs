@@ -29,8 +29,8 @@ const AppDataSource = new DataSource(
       }
 );
 
-export default AppDataSource;
- */
+export default AppDataSource; */
+
 import { DataSource } from "typeorm";
 import "dotenv/config";
 

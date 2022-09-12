@@ -1,6 +1,5 @@
 import AppDataSource from "../../data-source";
 import { Cards } from "../../entities/card.entity";
-import { Users } from "../../entities/users.entity";
 import { AppError } from "../../errors/AppError";
 import { ICardRequest } from "../../interfaces/card";
 

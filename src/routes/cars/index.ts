@@ -11,20 +11,20 @@ import uploadImageMiddleware from "../../middlewares/imageUpload.middleware";
 
 export const carsRouter = Router();
 
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: "upload",
-    filename: (request, file, callback) => {
-      const filename = `${file.originalname}`;
-      return callback(null, filename);
-    },
-  }),
-});
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     destination: "upload",
+//     filename: (request, file, callback) => {
+//       const filename = `${file.originalname}`;
+//       return callback(null, filename);
+//     },
+//   }),
+// });
 
 carsRouter.post(
   "",
-  upload.single("image"),
-  uploadImageMiddleware,
+  // upload.single("image"),
+  // uploadImageMiddleware,
   createCarController
 );
 
