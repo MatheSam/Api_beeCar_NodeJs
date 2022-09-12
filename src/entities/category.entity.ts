@@ -28,9 +28,6 @@ export class Categories {
   pricePerDay: number;
 
   @Column({ type: "decimal", precision: 12, scale: 2 })
-  pricePerWeekend: number;
-
-  @Column({ type: "decimal", precision: 12, scale: 2 })
   pricePerMouth: number;
 
   @Column({ type: "decimal", precision: 12, scale: 2 })

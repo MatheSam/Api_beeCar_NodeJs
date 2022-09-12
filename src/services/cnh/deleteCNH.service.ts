@@ -2,7 +2,6 @@ import AppDataSource from "../../data-source";
 import { Cnh } from "../../entities/cnh.entity";
 import { Users } from "../../entities/users.entity";
 import { AppError } from "../../errors/AppError";
-import { IUserRequest } from "../../interfaces/users";
 
 const deleteCNHService = async (id: string) => {
   const userRepository = AppDataSource.getRepository(Users);
@@ -10,13 +9,11 @@ const deleteCNHService = async (id: string) => {
 
   const user = await userRepository.findOneBy({ id });
 
-  const idCard = user?.cnh?.id;
-
-  if (!idCard) {
+  if (!user!.cnh) {
     throw new AppError("CNH not found", 404);
   }
 
-  await cnhRepository.delete({ id });
+  await cnhRepository.delete(user!.cnh!.id);
 
   const userUpdated = await userRepository.findOneBy({ id });
   return userUpdated;

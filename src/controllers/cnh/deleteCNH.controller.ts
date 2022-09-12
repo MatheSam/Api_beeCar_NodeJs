@@ -5,8 +5,8 @@ import deleteCNHService from "../../services/cnh/deleteCNH.service";
 
 const deleteCNHController = async (req: Request, res: Response) => {
   try {
-    const deletedUser = await deleteCNHService(req.user.id);
-    return res.status(200).json(deletedUser);
+    await deleteCNHService(req.user.id);
+    return res.status(204).send();
   } catch (error) {
     if (error instanceof AppError) {
       handleError(error, res);

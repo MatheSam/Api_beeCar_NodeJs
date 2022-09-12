@@ -6,7 +6,6 @@ export interface ICategoryRequest {
   directionType: string;
   powerWindows: boolean;
   pricePerDay: number;
-  pricePerWeekend: number;
   pricePerMouth: number;
   pricePeryear: number;
   isActive?: boolean;

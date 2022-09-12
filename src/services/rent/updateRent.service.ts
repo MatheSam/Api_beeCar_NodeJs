@@ -11,55 +11,76 @@ const updateRentService = async (
   { carId, finalDate, finalHour }: IRentRequest
 ): Promise<Rent> => {
   const rentRepository = AppDataSource.getRepository(Rent);
+  const carRepository = AppDataSource.getRepository(Cars);
+  const userRepository = AppDataSource.getRepository(Users);
 
   const trueRent = await rentRepository.findOneBy({ id: rentId });
 
-  if (!trueRent || new Date(trueRent!.finalDate) < new Date(finalDate)) {
-    throw new AppError("Rent expired or not found", 404);
+  if (!trueRent) {
+    throw new AppError("Rent not found", 404);
+  }
+
+  const user = await userRepository.findOneBy({ id: trueRent.users.id });
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  if (new Date(trueRent.initialDate) >= new Date(finalDate)) {
+    throw new AppError("The initial date don't be before than final date", 401);
+  }
+
+  if (new Date() >= new Date(finalDate)) {
+    throw new AppError("The final date don't be before than today", 401);
   }
 
   if (carId) {
-    const carRepository = AppDataSource.getRepository(Cars);
     const car = await carRepository.findOneBy({ id: carId });
+
     if (!car) {
       throw new AppError("Car not found", 404);
     }
 
-    const newTotal = (finalDate: string, finalHour: string) =>
-      calcRent(
-        trueRent!.initialDate.toString(),
-        trueRent!.initialHour.toString(),
-        finalDate,
-        finalHour,
-        car!.categories.pricePerDay,
-        car!.categories.pricePerMouth
-      );
-    const newRent = await rentRepository.update(trueRent!?.id, {
-      cars: car || trueRent?.cars,
-      finalDate: finalDate || trueRent!?.finalDate,
-      finalHour: finalHour || trueRent!?.finalHour,
-      totalValue: newTotal(finalDate, finalHour) || trueRent!?.totalValue,
+    await carRepository.update(trueRent.cars.id, { rented: false });
+    await carRepository.update(carId, { rented: true });
+
+    const newTotal = calcRent(
+      trueRent.initialDate.toString(),
+      trueRent.initialHour.toString(),
+      finalDate || trueRent.finalDate.toString(),
+      finalHour || trueRent.finalHour,
+      car.categories.pricePerDay,
+      car.categories.pricePerMouth
+    );
+
+    await rentRepository.update(trueRent.id, {
+      cars: car,
+      finalDate: finalDate || trueRent.finalDate,
+      finalHour: finalHour || trueRent.finalHour,
+      totalValue: newTotal,
     });
+
     const finalRent = await rentRepository.findOneBy({ id: trueRent?.id });
     return finalRent!;
   }
 
-  const newTotal = (finalDate: string, finalHour: string) =>
-    calcRent(
-      trueRent!.initialDate.toString(),
-      trueRent!.initialHour.toString(),
-      finalDate,
-      finalHour,
-      trueRent!.cars.categories.pricePerDay,
-      trueRent!.cars.categories.pricePerMouth
-    );
-  await rentRepository.update(trueRent!?.id, {
-    cars: trueRent!.cars,
-    finalDate: finalDate || trueRent!?.finalDate,
-    finalHour: finalHour || trueRent!?.finalHour,
-    totalValue: newTotal(finalDate, finalHour) || trueRent!?.totalValue,
+  const newTotal = calcRent(
+    trueRent.initialDate.toString(),
+    trueRent.initialHour.toString(),
+    finalDate || trueRent.finalDate.toString(),
+    finalHour || trueRent.finalHour,
+    trueRent.cars.categories.pricePerDay,
+    trueRent.cars.categories.pricePerMouth
+  );
+
+  await rentRepository.update(trueRent.id, {
+    cars: trueRent.cars,
+    finalDate: finalDate || trueRent.finalDate,
+    finalHour: finalHour || trueRent.finalHour,
+    totalValue: newTotal,
   });
-  const finalRent = await rentRepository.findOneBy({ id: trueRent?.id });
+
+  const finalRent = await rentRepository.findOneBy({ id: trueRent.id });
   return finalRent!;
 };
 

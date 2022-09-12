@@ -69,7 +69,6 @@ describe("/category", () => {
       .delete("/profile/cnh")
       .set("Authorization", `Bearer ${userLogin.body.token}`);
 
-    expect(response.body.cnh).toEqual(null);
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(204);
   });
 });

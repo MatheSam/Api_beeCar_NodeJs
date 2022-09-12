@@ -6,8 +6,10 @@ import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
 import {
   mockedAdmin,
   mockedAttUser,
+  mockedCard,
   mockedCars,
   mockedCategory,
+  mockedCnh,
   mockedLoginAdm,
   mockedLoginUser,
   mockedNewUser,
@@ -28,6 +30,7 @@ describe("/profile", () => {
       });
 
     await request(app).post("/profile").send(mockedUser);
+    await request(app).post("/profile").send(mockedAdmin);
   });
 
   afterAll(async () => {
@@ -73,12 +76,12 @@ describe("/profile", () => {
     expect(response.body).toHaveLength(3);
   });
 
-  /*  test("GET /profile - não deve ser capaz de listar usuários sem autenticação", async () => {
+  test("GET /profile - não deve ser capaz de listar usuários sem autenticação", async () => {
     const response = await request(app).get("/profile");
 
     expect(response.body).toHaveProperty("message");
     expect(response.status).toBe(401);
-  }); */
+  });
 
   test("GET /profile - não deve ser capaz de listar usuários se não for admnistrador", async () => {
     const userLoginResponse = await request(app)
@@ -92,30 +95,37 @@ describe("/profile", () => {
     expect(response.status).toBe(401);
   });
 
-  test("GET /profile/cars - deve ser capaz de retornar todos os carros locados pelo usuário", async () => {
+  test("GET /profile/rents - deve ser capaz de retornar todos os carros locados pelo usuário", async () => {
     const admLogin = await request(app).post("/login").send(mockedLoginAdm);
+    const userLogin = await request(app).post("/login").send(mockedLoginUser);
+
+    await request(app)
+      .post("/profile/card")
+      .send(mockedCard)
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
+
     await request(app)
       .post("/category")
       .send(mockedCategory)
       .set("Authorization", `Bearer ${admLogin.body.token}`);
+
     const car = await request(app)
       .post("/cars")
       .send(mockedCars)
-      .set("Authorization", `Bearer ${admLogin.body.token}`);
+      .set("Authorization", `Beare ${admLogin.body.token}`);
 
     mockedRent.carId = car.body.id;
 
-    const userLogin = await request(app).post("/login").send(mockedLoginUser);
-    const creatingRent = await request(app)
+    await request(app)
       .post("/rent")
       .send(mockedRent)
       .set("Authorization", `Bearer ${userLogin.body.token}`);
 
     const response = await request(app)
-      .get("/profile/cars")
+      .get("/profile/rents")
       .set("Authorization", `Bearer ${userLogin.body.token}`);
 
-    //expect(response.body).toHaveLength(1)
+    expect(response.body).toHaveLength(1);
   });
 
   test("PATCH /profile - deve ser capaz de atualizar os dados do próprio usuário", async () => {
@@ -133,13 +143,13 @@ describe("/profile", () => {
     expect(response.body[0].email).toEqual("juninho@mail.com");
   });
 
-  /*   test("DELETE /profile - não deve ser capaz de realizar um soft delete sem autenticação", async () => {
+  test("DELETE /profile - não deve ser capaz de realizar um soft delete sem autenticação", async () => {
     await request(app).post("/profile").send(mockedUser);
     const response = await request(app).delete(`/profile`);
 
     expect(response.body).toHaveProperty("message");
     expect(response.status).toBe(401);
-  }); */
+  });
 
   test("DELETE /profile -  Deve ser capaz de realizar um soft delete", async () => {
     await request(app).post("/profile").send(mockedUser);
