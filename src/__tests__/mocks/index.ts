@@ -57,7 +57,6 @@ export const mockedCars: ICarsRequest = {
   km: 5000,
   hp: 125,
   price: 35000,
-  img: "../../../",
 };
 
 export const mockedCarsUpdated = {

@@ -53,7 +53,7 @@ export class Cars {
   maintenence: boolean;
 
   @Column()
-  img: string;
+  img?: string;
 
   @ManyToOne(() => Categories, { eager: true })
   categories: Categories;
