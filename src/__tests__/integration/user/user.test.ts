@@ -89,7 +89,7 @@ describe("/profile", () => {
       .set("Authorization", `Bearer ${userLoginResponse.body.token}`);
 
     expect(response.body).toHaveProperty("message");
-    expect(response.status).toBe(403);
+    expect(response.status).toBe(401);
   });
 
   test("GET /profile/cars - deve ser capaz de retornar todos os carros locados pelo usuário", async () => {
