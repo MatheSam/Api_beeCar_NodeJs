@@ -82,8 +82,8 @@ export const mockedAttCategory = {
 };
 
 export const mockedRent: IRentRequest = {
-  finalDate: "10/12/2021",
-  initialDate: "09/12/2021",
+  finalDate: "10/12/2023",
+  initialDate: "09/12/2023",
   finalHour: "08:45",
   initialHour: "15:30",
   carId: "1",
@@ -108,7 +108,7 @@ export const mockedAttAddress = {
 export const mockedCard: ICardRequest = {
   cardNumber: "123546798123",
   name: "Juarez Silveira",
-  validate: "10/09/2022",
+  validate: "10/09/2025",
 };
 
 export const mockedAttCard = {
