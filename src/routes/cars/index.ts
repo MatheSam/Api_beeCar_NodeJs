@@ -5,6 +5,8 @@ import listCarsController from "../../controllers/cars/listCars.controller";
 import listSpecificCarController from "../../controllers/cars/listSpecificCar.controller";
 import softDeleteCarController from "../../controllers/cars/softDeleteCar.controller";
 import updateCarController from "../../controllers/cars/updateCar.controller";
+import { ensureAuthenticationMiddleware } from "../../middlewares/ensureAuthenticationMiddleware";
+
 import uploadImageMiddleware from "../../middlewares/imageUpload.middleware";
 
 export const carsRouter = Router();
@@ -25,7 +27,12 @@ carsRouter.post(
   uploadImageMiddleware,
   createCarController
 );
+
 carsRouter.get("", listCarsController);
 carsRouter.get("/:id", listSpecificCarController);
-carsRouter.patch("/:id", updateCarController);
-carsRouter.delete("/:id", softDeleteCarController);
+carsRouter.patch("/:id", ensureAuthenticationMiddleware, updateCarController);
+carsRouter.delete(
+  "/:id",
+  ensureAuthenticationMiddleware,
+  softDeleteCarController
+);
