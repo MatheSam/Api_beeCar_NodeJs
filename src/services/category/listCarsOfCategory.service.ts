@@ -14,8 +14,8 @@ const listCarsOfCategoryService = async (id: string) => {
     },
   });
 
-  if (!carsOfCategory){
-    throw new AppError("Car not found", 400)
+  if (!carsOfCategory) {
+    throw new AppError("Car not found", 404);
   }
 
   return categoryRepository;
