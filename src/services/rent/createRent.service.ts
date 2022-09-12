@@ -13,17 +13,35 @@ const createRentService = async (
   const UserRepository = AppDataSource.getRepository(Users);
   const carRepository = AppDataSource.getRepository(Cars);
   const rentRepository = AppDataSource.getRepository(Rent);
-
+  if (!carId) {
+    throw new AppError("Car is a required field", 400);
+  }
   const car = await carRepository.findOneBy({ id: carId });
 
   if (!car) {
     throw new AppError("Car not found!", 404);
   }
 
+  if (car.rented) {
+    throw new AppError("car is already rented", 403);
+  }
+
   const user = await UserRepository.findOneBy({ id: userId });
+
+  if (user?.cards?.length === 0) {
+    throw new AppError("You must to have a credit card", 403);
+  }
+
+  if (user?.cards?.some((card) => new Date(card.validate) <= new Date())) {
+    throw new AppError("Some card are expired or invalid", 403);
+  }
 
   if (!user) {
     throw new AppError("User not found!", 404);
+  }
+
+  if (new Date() >= new Date(finalDate)) {
+    throw new AppError("Not allowed to change date in the same day", 403);
   }
 
   const rentPrice = calcRent(

@@ -6,6 +6,7 @@ import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
 import {
   mockedAdmin,
   mockedAttRent,
+  mockedCard,
   mockedCars,
   mockedCategory,
   mockedLoginAdm,
@@ -14,7 +15,7 @@ import {
   mockedUser,
 } from "../../mocks";
 
-describe("/category", () => {
+describe("/rent", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
@@ -35,7 +36,12 @@ describe("/category", () => {
   });
 
   test("POST /rent - Deve ser capaz de gerar um aluguel", async () => {
+    const userLogin = await request(app).post("/login").send(mockedLoginUser);
     const admLogin = await request(app).post("/login").send(mockedLoginAdm);
+    await request(app)
+      .post("/profile/card")
+      .send(mockedCard)
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
     await request(app)
       .post("/category")
       .send(mockedCategory)
@@ -47,7 +53,6 @@ describe("/category", () => {
 
     mockedRent.carId = car.body.id;
 
-    const userLogin = await request(app).post("/login").send(mockedLoginUser);
     const response = await request(app)
       .post("/rent")
       .send(mockedRent)
@@ -76,8 +81,9 @@ describe("/category", () => {
       .patch(`/rent/${rents.body[0].id}`)
       .send(mockedAttRent)
       .set("Authorization", `Bearer ${userLogin.body.token}`);
+    console.log(response.body);
 
-    expect(response.body.finalHour).toEqual("15:45");
+    expect(response.body.finalHour).toEqual("15:45:00");
     expect(response.status).toEqual(200);
   });
 });
