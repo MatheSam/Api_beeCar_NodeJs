@@ -12,7 +12,7 @@ const createCardService = async (
   const cardRepository = AppDataSource.getRepository(Cards);
 
   const user = await usersRepository.findOneBy({ id: userId });
-  console.log(user,"usssssssssssssssrrrrrrrrrrrrrrrrrrr")
+ 
 
   const card = await cardRepository.save({
     cardNumber,

@@ -3,6 +3,5 @@ export interface IRentRequest {
   initialHour: string;
   finalDate: string;
   finalHour: string;
-  totalValue: number;
   carId: string;
 }

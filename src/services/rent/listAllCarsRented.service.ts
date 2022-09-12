@@ -1,14 +1,12 @@
 import AppDataSource from "../../data-source";
-import { Cars } from "../../entities/cars.entity";
+import { Rent } from "../../entities/rent.entity";
 
-const listAllCarsRentedService = async (): Promise<Cars[]> => {
-  const carsRepository = AppDataSource.getRepository(Cars);
+const listAllCarsRentedService = async (): Promise<Rent[]> => {
+  const rentRepository = AppDataSource.getRepository(Rent);
 
-  const cars = await carsRepository.findBy({
-    rent: true,
-  });
+  const rents = await rentRepository.find();
 
-  return cars;
+  return rents;
 };
 
 export default listAllCarsRentedService;

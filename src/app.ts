@@ -1,8 +1,7 @@
 import "reflect-metadata";
 import "express-async-errors";
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 
-import { handleError } from "./middlewares/errors.mid";
 import { addressRouter } from "./routes/address";
 import { cardRouter } from "./routes/card";
 import { carsRouter } from "./routes/cars";
@@ -11,7 +10,6 @@ import { cnhRouter } from "./routes/cnh";
 import { loginRouter } from "./routes/login";
 import { rentRouter } from "./routes/rent";
 import usersRouter from "./routes/users";
-import { AppError } from "./errors/AppError";
 
 const app = express();
 app.use(express.json());

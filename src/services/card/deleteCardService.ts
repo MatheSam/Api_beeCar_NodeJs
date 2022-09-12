@@ -1,7 +1,7 @@
 import AppDataSource from "../../data-source";
 import { Cards } from "../../entities/card.entity";
 import { AppError } from "../../errors/AppError";
-import { ICardRequest } from "../../interfaces/card";
+
 
 const deleteCardservice = async (id:string) => {
   const cardRepository = AppDataSource.getRepository(Cards);

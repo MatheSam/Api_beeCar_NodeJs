@@ -3,6 +3,7 @@ import { Users } from "../../entities/users.entity";
 import { IUserRequest } from "../../interfaces/users";
 import { hash } from "bcryptjs";
 import { AppError } from "../../errors/AppError";
+import { Rent } from "../../entities/rent.entity";
 
 const createUserService = async ({
   birthDate,
@@ -44,4 +45,90 @@ const listUsersService = async (): Promise<Users[]> => {
   return users;
 };
 
-export { createUserService, listUsersService };
+const listProfileCarsService = async (id: string) => {
+  const userRepository = AppDataSource.getRepository(Users);
+
+  const findUser = await userRepository.findOneBy({
+    id,
+  });
+
+  if (!findUser) {
+    throw new AppError("User not found");
+  }
+
+  const listOfCars = await AppDataSource.getRepository(Rent)
+    .createQueryBuilder("rent")
+    .innerJoinAndSelect("rent.users", "user")
+    .innerJoinAndSelect("playlistSongs.cars", "car")
+    .select([
+      "rent.initialDate",
+      "rent.initialHour",
+      "rent.finalDate",
+      "rent.finalHour",
+      "rent.totalValue",
+      "car.id",
+      "car.licensePlate",
+      "car.color",
+      "car.model",
+      "car.fuel",
+      "car.year",
+      "car.brand",
+      "car.rented",
+      "car.document",
+      "car.isActive",
+      "car.price",
+      "car.km",
+      "car.hp",
+      "car.maintenence",
+      "car.img",
+      "car.categories",
+    ])
+    .where("user.id = :id", { id })
+    .getMany();
+
+  return listOfCars;
+};
+
+const updateUserService = async (id: string, userData: IUserRequest) => {
+  const userRepository = AppDataSource.getRepository(Users);
+
+  const aim = await userRepository.findOne({
+    where: {
+      id,
+    },
+  });
+
+  if (!aim) {
+    throw new AppError("User not found");
+  }
+
+  userData.password = await hash(userData.password, 10);
+
+  const newUser = { ...aim, ...userData };
+
+  await userRepository.save(newUser);
+
+  return newUser;
+};
+
+const deleteUserService = async (id: string) => {
+  const userRepository = AppDataSource.getRepository(Users);
+
+  const user = await userRepository.findOneBy({
+    id,
+  });
+
+  if (!user) {
+    throw new AppError("User not Found");
+  }
+
+  await userRepository.delete(id);
+};
+
+export {
+  createUserService,
+  listUsersService,
+  listProfileCarsService,
+  updateUserService,
+  deleteUserService,
+};

@@ -46,12 +46,9 @@ export const calcRent = (
 
   if (range >= 2628000000) {
     const result: number = valuePerMonth * range;
-    console.log("+30dias");
     return +result.toFixed(2);
   } else {
     const result: number = valuePerDay * range;
-    console.log("-30");
-
     return +result.toFixed(2);
   }
 };
