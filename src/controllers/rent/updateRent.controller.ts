@@ -5,9 +5,8 @@ import updateRentService from "../../services/rent/updateRent.service";
 
 const updateRentController = async (req: Request, res: Response) => {
   try {
-    const { id } = req.user;
     const rentId = req.params.id;
-    const update = await updateRentService(id, rentId, req.body);
+    const update = await updateRentService(rentId, req.body);
     return res.json({ message: "rent updated", update });
   } catch (error) {
     if (error instanceof AppError) {

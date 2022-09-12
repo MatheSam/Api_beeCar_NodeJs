@@ -7,23 +7,14 @@ import { IRentRequest } from "../../interfaces/rent";
 import { calcRent } from "../../utils";
 
 const updateRentService = async (
-  userId: string,
   rentId: string,
   { carId, finalDate, finalHour }: IRentRequest
 ): Promise<Rent> => {
   const rentRepository = AppDataSource.getRepository(Rent);
-  const userRepository = AppDataSource.getRepository(Users);
-  const now = new Date();
-
-  const user = await userRepository.findOneBy({ id: userId });
-
-  if (!user) {
-    throw new AppError("User not found!", 404);
-  }
 
   const trueRent = await rentRepository.findOneBy({ id: rentId });
 
-  if (!trueRent || new Date(trueRent!.finalDate) < now) {
+  if (!trueRent || new Date(trueRent!.finalDate) < new Date(finalDate)) {
     throw new AppError("Rent expired or not found", 404);
   }
 
