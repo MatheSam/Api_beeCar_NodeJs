@@ -52,8 +52,8 @@ export class Cars {
   @Column({ default: false })
   maintenence: boolean;
 
-  @Column()
-  img: string;
+  @Column({ nullable: true })
+  img?: string;
 
   @ManyToOne(() => Categories, { eager: true })
   categories: Categories;
