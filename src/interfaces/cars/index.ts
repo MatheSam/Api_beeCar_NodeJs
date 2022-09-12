@@ -14,7 +14,7 @@ export interface ICarsRequest {
   price: number;
   km: number;
   hp: number;
-  img: string;
+  img?: string;
   categoryName: string;
   rentId?: string;
 }
