@@ -15,6 +15,12 @@ const createUserService = async ({
 }: IUserRequest): Promise<Users> => {
   const userRepository = AppDataSource.getRepository(Users);
 
+  const alreadyExists = await userRepository.findOneBy({ email });
+
+  if (alreadyExists) {
+    throw new AppError("User already exists", 400);
+  }
+
   const hashedPassword = await hash(password, 10);
 
   const birth = new Date(birthDate);
@@ -122,7 +128,11 @@ const deleteUserService = async (id: string) => {
     throw new AppError("User not Found");
   }
 
-  await userRepository.delete(id);
+  await userRepository.update(id, { isActive: false });
+
+  const updatedUser = await userRepository.findOneBy({ id });
+
+  return updatedUser;
 };
 
 export {

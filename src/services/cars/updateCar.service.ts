@@ -5,7 +5,7 @@ import { AppError } from "../../errors/AppError";
 import { ICarsUpdate } from "../../interfaces/cars";
 import { categoryReturn } from "../../utils";
 
-const updateCarService = async (updatedDate: ICarsUpdate, id: string): Promise<void> => {
+const updateCarService = async (updatedDate: ICarsUpdate, id: string) => {
   const carRepository = AppDataSource.getRepository(Cars);
 
   const car = await carRepository.findOneBy({ id });
@@ -48,6 +48,9 @@ const updateCarService = async (updatedDate: ICarsUpdate, id: string): Promise<v
     categories: newCategory || categories,
   });
 
+  const updatedCar = await carRepository.findOneBy({ id });
+
+  return updatedCar;
 };
 
 export default updateCarService;
