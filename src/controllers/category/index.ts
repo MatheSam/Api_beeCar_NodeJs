@@ -33,10 +33,7 @@ export const listCategoryController = async (req: Request, res: Response) => {
   }
 };
 
-export const listCarsOfCategoryController = async (
-  req: Request,
-  res: Response
-) => {
+export const updateCategoryController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const data = req.body;
@@ -51,7 +48,10 @@ export const listCarsOfCategoryController = async (
   }
 };
 
-export const updateCategoryController = async (req: Request, res: Response) => {
+export const listCarsOfCategoryController = async (
+  req: Request,
+  res: Response
+) => {
   try {
     const { id } = req.params;
     const carsOfCategory = await listCarsOfCategoryService(id);
@@ -68,7 +68,7 @@ export const updateCategoryController = async (req: Request, res: Response) => {
 export const deleteCategoryController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const category = await deleteCategoryService(id);
+    await deleteCategoryService(id);
     return res.status(200).send({
       message: "Category deleted successfully",
     });

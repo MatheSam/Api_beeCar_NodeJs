@@ -41,7 +41,7 @@ const updateAddressService = async (
   });
 
   if (!aim) {
-    throw new AppError("User not found");
+    throw new AppError("Address not found");
   }
 
   const newAddress = { ...aim, ...address };

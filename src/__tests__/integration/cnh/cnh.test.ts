@@ -4,10 +4,8 @@ import request from "supertest";
 import app from "../../../app";
 import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
 import {
-  mockedAddress,
-  mockedAdmin,
-  mockedAttAddress,
-  mockedLoginAdm,
+  mockedAttCnh,
+  mockedCnh,
   mockedLoginUser,
   mockedUser,
 } from "../../mocks";
@@ -25,46 +23,53 @@ describe("/category", () => {
       });
 
     await request(app).post("/profile").send(mockedUser);
-    await request(app).post("/profile").send(mockedAdmin);
   });
 
   afterAll(async () => {
     await connection.destroy();
   });
 
-  test("POST /profile/address - Deve ser capaz de criar um endereço para o usuário", async () => {
+  test("POST /profile/cnh - Deve ser capaz de criar uma CNH para o usuário", async () => {
     const userLogin = await request(app).post("/login").send(mockedLoginUser);
+
     const response = await request(app)
-      .post("/profile/address")
-      .send(mockedAddress)
+      .post("/profile/cnh")
+      .send(mockedCnh)
       .set("Authorization", `Bearer ${userLogin.body.token}`);
 
     expect(response.body).toHaveProperty("id");
   });
 
-  test("POST /profile/address - Não deve ser capaz de criar mais de um endereço para o usuário", async () => {
+  test("POST /profile/cnh - Não deve ser capaz de criar duas CNHS iguais para o usuário", async () => {
     const userLogin = await request(app).post("/login").send(mockedLoginUser);
+
     const response = await request(app)
-      .post("/profile/address")
-      .send(mockedAddress)
+      .post("/profile/cnh")
+      .send(mockedCnh)
       .set("Authorization", `Bearer ${userLogin.body.token}`);
 
-    expect(response.status).toEqual(400);
+    expect(response.status).toEqual(401);
   });
 
-  test("PATCH /profile/address - Deve ser capaz de atualizar um endereço", async () => {
+  test("PATCH /profile/cnh - Deve ser capaz de atualizar a CNH", async () => {
     const userLogin = await request(app).post("/login").send(mockedLoginUser);
-    const admLogin = await request(app).post("/login").send(mockedLoginAdm);
-    await request(app)
-      .patch("/profile/address")
-      .send(mockedAttAddress)
-      .set("Authorization", `Bearer ${userLogin.body.token}`);
 
     const response = await request(app)
-      .get("/profile")
-      .set("Authorization", `Bearer ${admLogin.body.token}`);
+      .patch("/profile/cnh")
+      .send(mockedAttCnh)
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
 
     expect(response.status).toEqual(200);
-    expect(response.body[0].address.number).toEqual(50);
+  });
+
+  test("DELETE /profile/cnh - Deve ser capaz de deletar a CNH do usuário", async () => {
+    const userLogin = await request(app).post("/login").send(mockedLoginUser);
+
+    const response = await request(app)
+      .delete("/profile/cnh")
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
+
+    expect(response.body.cnh).toEqual(null);
+    expect(response.status).toEqual(200);
   });
 });

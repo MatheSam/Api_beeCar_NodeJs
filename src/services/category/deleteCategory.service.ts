@@ -3,19 +3,17 @@ import { Categories } from "../../entities/category.entity";
 import { AppError } from "../../errors/AppError";
 
 const deleteCategoryService = async (id: string) => {
-    const categoryRepository = AppDataSource.getRepository(Categories);
+  const categoryRepository = AppDataSource.getRepository(Categories);
 
-    const category = await categoryRepository.findOneBy({id});
+  const category = await categoryRepository.findOneBy({ id });
 
-    if(!category){
-        throw new AppError("Category is not found", 404)
-    }
+  if (!category) {
+    throw new AppError("Category is not found", 404);
+  }
 
-    await categoryRepository.delete({id});
+  await categoryRepository.update(id, { isActive: false });
 
-    await categoryRepository.save(category);
-
-    return true;
-}
+  return true;
+};
 
 export default deleteCategoryService;

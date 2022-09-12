@@ -1,6 +1,7 @@
 import AppDataSource from "../../data-source";
 import { Cnh } from "../../entities/cnh.entity";
 import { Users } from "../../entities/users.entity";
+import { AppError } from "../../errors/AppError";
 import { ICnhRequest } from "../../interfaces/cnh";
 
 const createCNHService = async (
@@ -10,11 +11,25 @@ const createCNHService = async (
   const cnhRepository = AppDataSource.getRepository(Cnh);
   const userRepository = AppDataSource.getRepository(Users);
 
+  const alreadyExists = await cnhRepository.findOne({
+    where: {
+      type,
+      number,
+      validate,
+    },
+  });
+
+  if (alreadyExists) {
+    throw new AppError("CNH already exists", 401);
+  }
+
   const cnh = await cnhRepository.save({ type, number, validate });
 
-  const updatedUser = userRepository.update(id, { cnh });
+  await userRepository.update(id, { cnh });
 
-  return updatedUser;
+  const user = await userRepository.findOneBy({ id });
+
+  return user;
 };
 
 export default createCNHService;

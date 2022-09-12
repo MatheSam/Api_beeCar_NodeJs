@@ -5,6 +5,7 @@ import app from "../../../app";
 import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
 import {
   mockedAdmin,
+  mockedAttUser,
   mockedCars,
   mockedCategory,
   mockedLoginAdm,
@@ -114,7 +115,22 @@ describe("/profile", () => {
       .get("/profile/cars")
       .set("Authorization", `Bearer ${userLogin.body.token}`);
 
-    console.log(response.body);
+    //expect(response.body).toHaveLength(1)
+  });
+
+  test("PATCH /profile - deve ser capaz de atualizar os dados do próprio usuário", async () => {
+    const userLogin = await request(app).post("/login").send(mockedLoginUser);
+    const admLogin = await request(app).post("/login").send(mockedLoginAdm);
+
+    await request(app)
+      .patch("/profile")
+      .send(mockedAttUser)
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
+    const response = await request(app)
+      .get("/profile")
+      .set("Authorization", `Bearer ${admLogin.body.token}`);
+
+    expect(response.body[0].email).toEqual("juninho@mail.com");
   });
 
   /*   test("DELETE /profile - não deve ser capaz de realizar um soft delete sem autenticação", async () => {

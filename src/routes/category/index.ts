@@ -21,13 +21,13 @@ categoryRouter.get("", listCategoryController);
 categoryRouter.get("/:id/cars", listCarsOfCategoryController);
 categoryRouter.patch(
   "/:id",
-  userIsAdmMiddleware,
   ensureAuthenticationMiddleware,
+  userIsAdmMiddleware,
   updateCategoryController
 );
 categoryRouter.delete(
   "/:id",
-  userIsAdmMiddleware,
   ensureAuthenticationMiddleware,
+  userIsAdmMiddleware,
   deleteCategoryController
 );
