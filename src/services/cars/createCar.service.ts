@@ -5,7 +5,7 @@ import { AppError } from "../../errors/AppError";
 import { ICarsRequest } from "../../interfaces/cars";
 
 const createCarService = async (
-  image: string,
+  // image: string,
   {
     licensePlate,
     brand,
@@ -14,6 +14,7 @@ const createCarService = async (
     fuel,
     hp,
     km,
+    img,
     model,
     price,
     year,
@@ -41,7 +42,7 @@ const createCarService = async (
     color,
     fuel,
     hp,
-    img: image,
+    img,
     km,
     model,
     price,
