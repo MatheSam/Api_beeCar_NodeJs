@@ -14,7 +14,6 @@ const upload = multer({
     destination: "upload",
     filename: (request, file, callback) => {
       const filename = `${file.originalname}`;
-      console.log(filename);
       return callback(null, filename);
     },
   }),

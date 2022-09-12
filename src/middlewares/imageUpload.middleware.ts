@@ -15,7 +15,6 @@ const uploadImageMiddleware = async (
     const result = await cloudinaryServer.uploader.upload(fileStr!.path, {
       upload_preset: "beecar",
     });
-    console.log(result.url, typeof result.url);
     req.upload = { img: result.url };
     deleteUpload(fileStr);
     next();
