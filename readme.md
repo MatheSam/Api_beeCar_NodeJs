@@ -1241,46 +1241,47 @@ Retorno esperado (200):
 
 ```json
 [
-	{
-		"id": "a372cd72-6543-4b99-9da6-16b3401c998a",
-		"initialDate": "2023-09-10",
-		"initialHour": "05:00:00",
-		"finalDate": "2023-09-12",
-		"finalHour": "10:00:00",
-		"totalValue": "1104.17",
-		"users": {
-			"id": "da281e6e-b9c4-4f57-99e7-1cab82efaed8",
-			"name": "Samuel Persuhn",
-			"birthDate": "1996-06-07",
-			"cpf": "00000000000",
-			"age": 26,
-			"email": "samu192@beecar.com",
-			"isAdm": true,
+  {
+    "id": "a372cd72-6543-4b99-9da6-16b3401c998a",
+    "initialDate": "2023-09-10",
+    "initialHour": "05:00:00",
+    "finalDate": "2023-09-12",
+    "finalHour": "10:00:00",
+    "totalValue": "1104.17",
+    "users": {
+      "id": "da281e6e-b9c4-4f57-99e7-1cab82efaed8",
+      "name": "Samuel Persuhn",
+      "birthDate": "1996-06-07",
+      "cpf": "00000000000",
+      "age": 26,
+      "email": "samu192@beecar.com",
+      "isAdm": true,
 
-			"isActive": true,
-			"cnh": {
-				"id": "ab6327c4-3792-49b8-a870-7193b93ea580",
-				"type": "AB",
-				"number": "13245687900",
-				"validate": "2022-10-09"
-			},
-			"address": {
-				"id": "e429e3ae-2a62-4935-b4e6-d2390fe06e0d",
-				"district": "Caiobá",
-				"zipCode": "84520060",
-				"number": "9999",
-				"city": "Jacundá",
-				"state": "RR"
-			},
-			"cards": [
-				{
-					"id": "401670e5-59b3-452d-9dc7-d6ac783e81ec",
-					"cardNumber": "123679823",
-					"validate": "2024-10-09",
-					"name": "Juarez Silveira"
-				}
-		]
-	}
+      "isActive": true,
+      "cnh": {
+        "id": "ab6327c4-3792-49b8-a870-7193b93ea580",
+        "type": "AB",
+        "number": "13245687900",
+        "validate": "2022-10-09"
+      },
+      "address": {
+        "id": "e429e3ae-2a62-4935-b4e6-d2390fe06e0d",
+        "district": "Caiobá",
+        "zipCode": "84520060",
+        "number": "9999",
+        "city": "Jacundá",
+        "state": "RR"
+      },
+      "cards": [
+        {
+          "id": "401670e5-59b3-452d-9dc7-d6ac783e81ec",
+          "cardNumber": "123679823",
+          "validate": "2024-10-09",
+          "name": "Juarez Silveira"
+        }
+      ]
+    }
+  }
 ]
 ```
 
