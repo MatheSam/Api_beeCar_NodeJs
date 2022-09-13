@@ -9,9 +9,9 @@ const uploadImageMiddleware = async (
 ) => {
   try {
     const fileStr = req.file;
-    // if (!fileStr) {
-    //   res.status(400).json({ message: "image is required" });
-    // }
+    if (!fileStr) {
+      res.status(400).json({ message: "image is required" });
+    }
     if (fileStr) {
       const result = await cloudinaryServer.uploader.upload(fileStr!.path, {
         upload_preset: "beecar",
