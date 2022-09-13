@@ -653,6 +653,8 @@ Exemplo de corpo (body):
 }
 ```
 
+Obervação: A criação de um carro espera o envio da requisição acima em formato multipart/form-data, pois necessita do envio de uma imagem do tipo .png ou .jpeg. Os dados são enviados como data = json e image = file.
+
 Retorno esperado (201):
 
 ```json
@@ -660,7 +662,7 @@ Retorno esperado (201):
   "licensePlate": "9999999",
   "brand": "Ford",
   "categories": {
-    "id": "69a2d850-6b31-4d48-82d3-492d7ab40696",
+    "id": "b886f551-0b9d-43c6-9643-f594f625690e",
     "name": "Categoria A",
     "automatic": false,
     "type": "hatch",
@@ -675,12 +677,12 @@ Retorno esperado (201):
   "color": "black",
   "fuel": "G",
   "hp": 125,
-  "img": null,
+  "img": "http://res.cloudinary.com/djftjudw4/image/upload/v1663081849/Beecars/uwMHtnF1115h2AdDeNRI92ObpRjnS2vR_cvovra.jpg",
   "km": 5000,
   "model": "Nova Balanciaga",
   "price": 35000,
   "year": 2015,
-  "id": "7e94589d-efc1-4ac7-aced-57667dda289e",
+  "id": "57c7e296-1ac4-4ed9-9465-1376785d9e35",
   "rented": false,
   "document": true,
   "isActive": true,
