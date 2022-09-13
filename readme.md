@@ -20,13 +20,21 @@ Além disso, o usuário poderá cadastrar um ou mais cartões de crédito, visua
 
 URL Base: https://beecarrent.herokuapp.com/
 
+Permissões por rota:
+
+- **Usuário:** O usuário precisa estar logado, ou seja, necessita do envio do token do usuário para a requisição ter sucesso.
+- **Administrador:** O usuário precisa estar logado com a propriedade **isAdm**: **true**. É necessário o envio do token para validação e sucesso da rota.
+- **Pública**: Não é necessário um usuário logado, ou seja, não precisa do envio de um token de autenticação.
+
+Usuários com a permissão de **administrador** tem todas as permissivas que são de **usuário**, porém, um **usuário** não pode acessar rotas de **administrador.**
+
 # 👤 /profile
 
 Rota de criação e atualização de usuários.
 
 ### Requisições:
 
-📤 **POST /profile**
+📤 **POST /profile (criação de usuário adm)**
 
 🔐 Nível de permissão da rota: **público**.
 
@@ -58,7 +66,7 @@ Retorno esperado (201):
 }
 ```
 
-Observação: o parâmetro **age** e **isActive** são gerados automaticamente pelo servidor.
+Observação: o parâmetro **age,** **isActive, cnh e address** são gerados automaticamente pelo servidor.
 
 📤 **POST /profile (criação de usuário não adm)**
 
@@ -68,27 +76,29 @@ Padrão de corpo (body) para a requisição:
 
 ```json
 {
-  "name": "Samuel Persuhn",
-  "birthDate": "06/07/1996",
-  "cpf": "00000000000",
-  "email": "samuelpr@gmail.com",
-  "password": "deusfe10"
+  "name": "Julio Cesar",
+  "password": "12345",
+  "birthDate": "1998-05-07",
+  "cpf": "12345678910",
+  "email": "julhino@gmail.com"
 }
 ```
 
 Retorno esperado (201):
 
 ```json
-{
-  "name": "Samuel Persuhn",
-  "birthDate": "06/07/1996",
-  "cpf": "00000000000",
-  "age": 26,
-  "email": "samuelpr@gmail.com",
-  "id": "307a6cbc-7bab-4f21-9b5b-b13b8b4c0c30",
-  "isAdm": false,
-  "isActive": true
-}
+	{
+		"id": "5c772eeb-6ae6-4201-8423-b7db66ec17fc",
+		"name": "Julio Cesar",
+		"birthDate": "1998-05-07",
+		"cpf": "12345678910",
+		"age": 24,
+		"email": "julhino@gmail.com",
+		"isAdm": false,
+		"isActive": true,
+		"cnh": null,
+		"address": null
+	},
 ```
 
 Observação: Quando o parâmetro **isAdm** é omisso na requisição, é gerado um valor para propriedade de **false** por padrão pelo servidor.
@@ -134,22 +144,23 @@ Retorno esperado (200):
 
 🔐 Nível de permissão da rota: **usuário**.
 
-Lista todos os carros alugados pelo usuário (histórico).
+Lista todos os aluguéis efetuados pelo usuário na aplicação (histórico).
 
 Retorno esperado (200):
 
 ```json
-"cars":
-[
-  { "id": "45546545",
+"cars": [
+	{		"id": "45546545",
 		"todos": "os dados"
 	},
 	{
-    "id": "45546545",
-    "todos": "os dados"
-  }
+		"id": "45546545",
+		"todos": "os dados"
+		}
 ]
 ```
+
+Observação: A rota **/RENT** trata das regras para um usuário criar um aluguel.
 
 📦 **PATCH /profile**
 
@@ -183,6 +194,8 @@ Retorno esperado (200):
   }
 }
 ```
+
+Observação: Todos os parâmetros de criação do usuário são opcionais, **menos os gerados pelo servidor como: isAdm, isActive, age, cnh, address e id.**
 
 💽 **DELETE /profile**
 
@@ -218,11 +231,11 @@ Retorno esperado:
 
 ```json
 {
-  "message": "missing token"
+  "message": "Invalid token"
 }
 ```
 
-📥 **GET /profile (403) Forbbiden**
+📥 **GET /profile (401) Unauthorized**
 
 Token passado no header, porém, essa requisição precisa de um token de administrador;
 
@@ -230,7 +243,7 @@ Retorno esperado:
 
 ```json
 {
-  "message": "you need admin permission"
+  "message": "You aren't allowed to do this"
 }
 ```
 
@@ -246,6 +259,8 @@ Retorno esperado:
 }
 ```
 
+Observação: tokens passados que não pertencem ao usuário ao qual está sendo feita a alteração resultam no mesmo erro.
+
 💽 **DELETE /profile (400) bad request**
 
 No caso da inativação do usuário ou qualquer outra alteração não é permitida caso o usuário já esteja com o valor da propriedade **isActive** como **false**.
@@ -257,6 +272,510 @@ Retorno esperado:
   "message": "this account is already inactive"
 }
 ```
+
+# 📝 /address
+
+Rota responsável por cadastrar e alterar o endereço do usuário.
+
+## Requisições:
+
+📤 **/POST /profile/address**
+
+Rota para criação de um endereço para o usuário.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+Exemplo de requisição (body):
+
+```json
+{
+  "city": "Jacundá",
+  "district": "Caiobá",
+  "number": "420",
+  "state": "RR",
+  "zipCode": "84520060"
+}
+```
+
+Retorno esperado (201):
+
+```json
+{
+  "district": "Caiobá",
+  "zipCode": "84520060",
+  "number": "420",
+  "city": "Jacundá",
+  "state": "RR",
+  "id": "e429e3ae-2a62-4935-b4e6-d2390fe06e0d"
+}
+```
+
+Observação: O endereço do usuário tem seu próprio ID sendo vinculado ao usuário que efetuou a requisição através do token de validação.
+
+Um usuário pode criar e alterar um endereço, porém, não pode deletá-lo, nesses casos, faça a inativação da conta se houver necessidade.
+
+📦 **/PATCH /profile/address**
+
+Rota para criação de um endereço para o usuário.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+Exemplo de requisição (body):
+
+```json
+{
+  "number": "9999"
+}
+```
+
+Retorno esperado (200):
+
+```json
+{
+  "id": "e429e3ae-2a62-4935-b4e6-d2390fe06e0d",
+  "district": "Caiobá",
+  "zipCode": "84520060",
+  "number": "9999",
+  "city": "Jacundá",
+  "state": "RR"
+}
+```
+
+# 💳 Credit Card
+
+Rota responsável pelo cadastro de cartões de crédito do usuário, sendo possível o cadastro de um ou mais cartões.
+
+## Requisições:
+
+📤 **/POST /profile/card**
+
+Rota para criação de cartão de crédito.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+Exemplo de requisição (body):
+
+```json
+{
+  "cardNumber": "123679823",
+  "name": "Juarez Silveira",
+  "validate": "10/09/2024"
+}
+```
+
+Retorno esperado (201):
+
+```json
+{
+  "cardNumber": "123679823",
+  "validate": "10/09/2024",
+  "name": "Juarez Silveira",
+  "user": {
+    "id": "da281e6e-b9c4-4f57-99e7-1cab82efaed8",
+    "name": "Samuel Persuhn",
+    "birthDate": "1996-06-07",
+    "cpf": "00000000000",
+    "age": 26,
+    "email": "samu192@beecar.com",
+    "isAdm": true,
+    "isActive": true,
+    "cnh": null,
+    "address": {
+      "id": "e429e3ae-2a62-4935-b4e6-d2390fe06e0d",
+      "district": "Caiobá",
+      "zipCode": "84520060",
+      "number": "9999",
+      "city": "Jacundá",
+      "state": "RR"
+    },
+    "cards": []
+  },
+  "id": "750736d4-2999-4de5-8db6-1acf15919a42"
+}
+```
+
+Observação: O cartão do usuário tem seu próprio ID sendo vinculado ao usuário que efetuou a requisição através do token de validação.
+
+📥 **/GET /profile/card:**
+
+Rota para listagem dos cartões de crédito do usuário.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+Retorno esperado (200):
+
+```json
+[
+  {
+    "id": "750736d4-2999-4de5-8db6-1acf15919a42",
+    "cardNumber": "123679823",
+    "validate": "2024-10-09",
+    "name": "Juarez Silveira"
+  }
+]
+```
+
+📦 **/PATCH /profile/card/:id**
+
+⚠️ O **id** da categoria deve ser passado por _query params_ **(:id)**
+
+Rota para alteração dos dados do cartão de crédito do usuário.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+Exemplo de corpo (body) de requisição:
+
+```json
+{
+  "validate": "10/11/2022"
+}
+```
+
+Retorno esperado (200):
+
+```json
+{
+  "message": "CardUpdated"
+}
+```
+
+💽 **DELETE /profile/card/:id**
+
+⚠️ O **id** da categoria deve ser passado por _query params_ **(:id)**
+
+Rota deleção de um cartão de crédito do usuário.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+Requisição do verbo **delete** do protocolo **HTTP,** portanto não é necessário um corpo (body) de requisição.
+
+Retorno esperado (204): No body content
+
+# 💼 /cnh
+
+📤 **/POST /profile/cnh**
+
+Rota para criação de documento CNH do usuário.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+Exemplo de requisição (body):
+
+```json
+{
+  "number": "13245687900",
+  "type": "AB",
+  "validate": "10/09/2022"
+}
+```
+
+Retorno esperado (201):
+
+```json
+{
+  "id": "da281e6e-b9c4-4f57-99e7-1cab82efaed8",
+  "name": "Samuel Persuhn",
+  "birthDate": "1996-06-07",
+  "cpf": "00000000000",
+  "age": 26,
+  "email": "samu192@beecar.com",
+  "isAdm": true,
+  "isActive": true,
+  "cnh": {
+    "id": "3f6223ce-dfb0-46ff-ae23-cdcff3580d76",
+    "type": "AB",
+    "number": "13245687900",
+    "validate": "2022-10-09"
+  },
+  "address": {
+    "id": "e429e3ae-2a62-4935-b4e6-d2390fe06e0d",
+    "district": "Caiobá",
+    "zipCode": "84520060",
+    "number": "9999",
+    "city": "Jacundá",
+    "state": "RR"
+  },
+  "cards": []
+}
+```
+
+📦 **/PATCH /profile/cnh**
+
+Rota para alteração da CNH do usuário.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+Exemplo de corpo (body) de requisição:
+
+```json
+{
+  "type": "C"
+}
+```
+
+Retorno esperado (200):
+
+```json
+{
+  "message": "CNH updated"
+}
+```
+
+💽 **DELETE /profile/cnh**
+
+Rota para deleção da cnh do usuário.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+Requisição do verbo **delete** do protocolo **HTTP,** portanto não é necessário um corpo (body) de requisição.
+
+Retorno esperado (204): No body content
+
+# 🔑/login
+
+Rota para autenticação de usuário.
+
+📤 **/POST**
+
+Criação de uma autenticação:
+
+Exemplo de corpo (body):
+
+```json
+{
+  "email": "samu192@beecar.com",
+  "password": "deusfe10"
+}
+```
+
+Retorno esperado (200):
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9yJpc0FkbSI6dHJ1ZSwidXNlcklkIjoiZGEyODFlwNzY0ODQsInN1YiI6ImRhMjgxZTZlLWI5YzQtNGY1Ny05OWU3LTFjYWI4MmVmYWVkOCJ9.es"
+}
+```
+
+Observação: O token acima é apenas um exemplo e não pode ser usado para validação de autenticação.
+
+Se o usuário estiver inativo, ao fazer o login sua conta será reativada.
+
+# 🚖 /cars
+
+Rota para criação de carros.
+
+## Requisições:
+
+📤 **/POST**
+
+Rota para criação de carros.
+
+🔐 Nível de permissão da rota: **administrador**.
+
+Exemplo de corpo (body):
+
+```json
+{
+  "licensePlate": "9999999",
+  "color": "black",
+  "model": "Nova Balanciaga",
+  "fuel": "G",
+  "year": 2015,
+  "brand": "Ford",
+  "category": "Categoria A",
+  "km": 5000,
+  "hp": 125,
+  "price": 35000
+}
+```
+
+Retorno esperado (201):
+
+```json
+{
+  "licensePlate": "9999999",
+  "brand": "Ford",
+  "categories": {
+    "id": "69a2d850-6b31-4d48-82d3-492d7ab40696",
+    "name": "Categoria A",
+    "automatic": false,
+    "type": "hatch",
+    "airConditioning": true,
+    "directionType": "eletro-hidraulica",
+    "powerWindows": true,
+    "pricePerDay": "500.00",
+    "pricePerMouth": "1990.00",
+    "pricePeryear": "12000.00",
+    "isActive": true
+  },
+  "color": "black",
+  "fuel": "G",
+  "hp": 125,
+  "img": null,
+  "km": 5000,
+  "model": "Nova Balanciaga",
+  "price": 35000,
+  "year": 2015,
+  "id": "7e94589d-efc1-4ac7-aced-57667dda289e",
+  "rented": false,
+  "document": true,
+  "isActive": true,
+  "maintenence": false
+}
+```
+
+Observação: um carro não pode ser criado sem ter uma categoria existente ao qual possa vinculá-lo.
+
+📥 **/GET**
+
+Rota para listagem dos carros.
+
+🔐 Nível de permissão da rota: **público**.
+
+Retorno esperado (200):
+
+```json
+[
+  {
+    "id": "7e94589d-efc1-4ac7-aced-57667dda289e",
+    "licensePlate": "9999999",
+    "color": "black",
+    "model": "Nova Balanciaga",
+    "fuel": "G",
+    "year": 2015,
+    "brand": "Ford",
+    "rented": false,
+    "document": true,
+    "isActive": true,
+    "price": "35000.00",
+    "km": "5000.00",
+    "hp": 125,
+    "maintenence": false,
+    "img": null,
+    "categories": {
+      "id": "69a2d850-6b31-4d48-82d3-492d7ab40696",
+      "name": "Categoria A",
+      "automatic": false,
+      "type": "hatch",
+      "airConditioning": true,
+      "directionType": "eletro-hidraulica",
+      "powerWindows": true,
+      "pricePerDay": "500.00",
+      "pricePerMouth": "1990.00",
+      "pricePeryear": "12000.00",
+      "isActive": true
+    }
+  }
+]
+```
+
+📥 **/GET /cars/:id**
+
+Rota responsável por listar um carro específico.
+
+⚠️ O **id** da categoria deve ser passado por _query params_ **(:id)**
+
+🔐 Nível de permissão da rota: **público**.
+
+Retorno esperado (200):
+
+```json
+{
+  "id": "7e94589d-efc1-4ac7-aced-57667dda289e",
+  "licensePlate": "9999999",
+  "color": "black",
+  "model": "Nova Balanciaga",
+  "fuel": "G",
+  "year": 2015,
+  "brand": "Ford",
+  "rented": false,
+  "document": true,
+  "isActive": true,
+  "price": "35000.00",
+  "km": "5000.00",
+  "hp": 125,
+  "maintenence": false,
+  "img": null,
+  "categories": {
+    "id": "69a2d850-6b31-4d48-82d3-492d7ab40696",
+    "name": "Categoria A",
+    "automatic": false,
+    "type": "hatch",
+    "airConditioning": true,
+    "directionType": "eletro-hidraulica",
+    "powerWindows": true,
+    "pricePerDay": "500.00",
+    "pricePerMouth": "1990.00",
+    "pricePeryear": "12000.00",
+    "isActive": true
+  }
+}
+```
+
+📦 **/PATCH /cars/:id**
+
+Rota responsável pela alteração de dados de um carro.
+
+⚠️ O **id** da categoria deve ser passado por _query params_ **(:id)**
+
+🔐 Nível de permissão da rota: **administrador**.
+
+Exemplo de corpo (body) da requisição:
+
+```json
+{
+  "km": 0,
+  "color": "white",
+  "hp": 550
+}
+```
+
+Retorno esperado (200):
+
+```json
+{
+  "id": "7e94589d-efc1-4ac7-aced-57667dda289e",
+  "licensePlate": "9999999",
+  "color": "white",
+  "model": "Nova Balanciaga",
+  "fuel": "G",
+  "year": 2015,
+  "brand": "Ford",
+  "rented": false,
+  "document": true,
+  "isActive": true,
+  "price": "35000.00",
+  "km": "5000.00",
+  "hp": 550,
+  "maintenence": false,
+  "img": null,
+  "categories": {
+    "id": "69a2d850-6b31-4d48-82d3-492d7ab40696",
+    "name": "Categoria A",
+    "automatic": false,
+    "type": "hatch",
+    "airConditioning": true,
+    "directionType": "eletro-hidraulica",
+    "powerWindows": true,
+    "pricePerDay": "500.00",
+    "pricePerMouth": "1990.00",
+    "pricePeryear": "12000.00",
+    "isActive": true
+  }
+}
+```
+
+💽 **DELETE /cars/:id**
+
+Rota para deleção de um carro.
+
+⚠️ O **id** da categoria deve ser passado por _query params_ **(:id)**
+
+🔐 Nível de permissão da rota: **administrador**.
+
+Requisição do verbo **delete** do protocolo **HTTP,** portanto não é necessário um corpo (body) de requisição.
+
+Retorno esperado (204): No body content
 
 # 🪧 /category
 
@@ -277,9 +796,12 @@ Padrão de corpo (body) para a requisição:
   "name": "Categoria A",
   "automatic": false,
   "type": "hatch",
-  "airConditioning": true,
-  "directionType": "eletro-hidráulica",
-  "powerWIndows": true
+  "airConditioting": true,
+  "directionType": "eletro-hidraulica",
+  "powerWindows": true,
+  "pricePerDay": 500,
+  "pricePerMouth": 1990,
+  "pricePeryear": 12000
 }
 ```
 
@@ -295,13 +817,11 @@ Padrão de resposta (201):
   "pricePerDay": 500,
   "pricePerMouth": 1990,
   "pricePeryear": 12000,
-  "id": "0f9f6ed1-c96a-4bd1-b26f-afacdb448061",
-  "airCondioting": true,
+  "id": "69a2d850-6b31-4d48-82d3-492d7ab40696",
+  "airConditioning": true,
   "isActive": true
 }
 ```
-
-Observações: os elementos **pricePerMouth,** **pricePerYear** e **pricePerDay** são gerados pelo servidor, o resto dos dados é de caráter obrigatório na requisição. Para mais informações entre em contato com os administradores.
 
 📥 **GET /category**
 
@@ -354,7 +874,18 @@ Padrão de resposta (200):
 
 ```json
 {
-  "ainta terá um exemplo": true
+  "id": "69a2d850-6b31-4d48-82d3-492d7ab40696",
+  "name": "Categoria A",
+  "automatic": false,
+  "type": "hatch",
+  "airConditioning": true,
+  "directionType": "eletro-hidraulica",
+  "powerWindows": true,
+  "pricePerDay": "500.00",
+  "pricePerMouth": "1990.00",
+  "pricePeryear": "12000.00",
+  "isActive": true,
+  "cars": []
 }
 ```
 
@@ -409,7 +940,238 @@ Requisição do verbo **delete** do protocolo **HTTP,** portanto não é necess�
 
 Observação: A conta do usuário é apenas desativada, podendo ser reativada posteriormente.
 
-Retorno esperado (204): No body content
+Retorno esperado (204): No body content.
+
+## ❌ Possíveis erros da rota
+
+📥 **GET /category/:id/cars**
+
+Requisição de uma categoria com id inválido.
+
+Retorno esperado 404:
+
+```json
+{
+  "message": "category was not found"
+}
+```
+
+# 💵 /rent
+
+Rota responsável por criar aluguéis de carros.
+
+Observações:
+
+Um usuário só pode ter requisitar um aluguel de um carro cumprindo os seguintes requisitos:
+
+- Deve ter um endereço cadastrado;
+- Deve ter uma CNH válida cadastrada;
+- O usuário deve ter a propriedade isActive como **true**
+- Pelo menos um cartão de crédito válido cadastrado.
+
+Um carro só pode ser alugado com o seguinte requisito:
+
+- A propriedade maintence do carro não pode estar como **true;**
+- O carro não pode ter a propriedade rented como **true;**
+- O carro deve ter a propriedade document como **true.**
+
+## Requisições:
+
+📤 **/POST**
+
+Rota responsável por criar um novo aluguel.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+Exemplo de corpo (body):
+
+```json
+{
+  "initialDate": "09/10/2023",
+  "initialHour": "05:00:00.00",
+  "finalDate": "09/12/2023",
+  "finalHour": "10:00:00.00",
+  "carId": "7e94589d-efc1-4ac7-aced-57667dda289e"
+}
+```
+
+Retorno esperado (201):
+
+```json
+{
+  "initialDate": "09/10/2023",
+  "initialHour": "05:00:00.00",
+  "finalDate": "09/12/2023",
+  "finalHour": "10:00:00.00",
+  "totalValue": 1104.17,
+  "users": {
+    "id": "da281e6e-b9c4-4f57-99e7-1cab82efaed8",
+    "name": "Samuel Persuhn",
+    "birthDate": "1996-06-07",
+    "cpf": "00000000000",
+    "age": 26,
+    "email": "samu192@beecar.com",
+    "isAdm": true,
+    "isActive": true,
+    "cnh": {
+      "id": "ab6327c4-3792-49b8-a870-7193b93ea580",
+      "type": "AB",
+      "number": "13245687900",
+      "validate": "2022-10-09"
+    },
+    "address": {
+      "id": "e429e3ae-2a62-4935-b4e6-d2390fe06e0d",
+      "district": "Caiobá",
+      "zipCode": "84520060",
+      "number": "9999",
+      "city": "Jacundá",
+      "state": "RR"
+    },
+    "cards": [
+      {
+        "id": "401670e5-59b3-452d-9dc7-d6ac783e81ec",
+        "cardNumber": "123679823",
+        "validate": "2024-10-09",
+        "name": "Juarez Silveira"
+      }
+    ]
+  },
+  "cars": {
+    "id": "7e94589d-efc1-4ac7-aced-57667dda289e",
+    "licensePlate": "9999999",
+    "color": "white",
+    "model": "Nova Balanciaga",
+    "fuel": "G",
+    "year": 2015,
+    "brand": "Ford",
+    "rented": false,
+    "document": true,
+    "isActive": true,
+    "price": "35000.00",
+    "km": "5000.00",
+    "hp": 550,
+    "maintenence": false,
+    "img": null,
+    "categories": {
+      "id": "69a2d850-6b31-4d48-82d3-492d7ab40696",
+      "name": "Categoria A",
+      "automatic": false,
+      "type": "hatch",
+      "airConditioning": true,
+      "directionType": "eletro-hidraulica",
+      "powerWindows": true,
+      "pricePerDay": "500.00",
+      "pricePerMouth": "1990.00",
+      "pricePeryear": "12000.00",
+      "isActive": true
+    }
+  },
+  "id": "0a6a6105-45f9-452e-8d66-3a917e11ca76"
+}
+```
+
+Observação: Haverá a geração de um id da locação que está vinculada ao usuário e ao carro.
+
+📦 **/PATCH /rent/:id**
+
+Atualiza os dados de um determinado aluguel.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+⚠️ O **id** da categoria deve ser passado por _query params_ **(:id)**
+
+Requisição de corpo (body):
+
+```json
+{
+  "finalHour": "08:00"
+}
+```
+
+Retorno esperado (200):
+
+```json
+{
+  "message": "rent updated",
+  "update": {
+    "id": "0a6a6105-45f9-452e-8d66-3a917e11ca76",
+    "initialDate": "2023-09-10",
+    "initialHour": "05:00:00",
+    "finalDate": "2023-09-12",
+    "finalHour": "08:00:00",
+    "totalValue": "1062.50",
+    "users": {
+      "id": "da281e6e-b9c4-4f57-99e7-1cab82efaed8",
+      "name": "Samuel Persuhn",
+      "birthDate": "1996-06-07",
+      "cpf": "00000000000",
+      "age": 26,
+      "email": "samu192@beecar.com",
+      "isAdm": true,
+      "cnh": {
+        "id": "ab6327c4-3792-49b8-a870-7193b93ea580",
+        "type": "AB",
+        "number": "13245687900",
+        "validate": "2022-10-09"
+      },
+      "address": {
+        "id": "e429e3ae-2a62-4935-b4e6-d2390fe06e0d",
+        "district": "Caiobá",
+        "zipCode": "84520060",
+        "number": "9999",
+        "city": "Jacundá",
+        "state": "RR"
+      },
+      "cards": [
+        {
+          "id": "401670e5-59b3-452d-9dc7-d6ac783e81ec",
+          "cardNumber": "123679823",
+          "validate": "2024-10-09",
+          "name": "Juarez Silveira"
+        }
+      ]
+    },
+    "cars": {
+      "id": "7e94589d-efc1-4ac7-aced-57667dda289e",
+      "licensePlate": "9999999",
+      "color": "white",
+      "model": "Nova Balanciaga",
+      "fuel": "G",
+      "year": 2015,
+      "brand": "Ford",
+      "rented": true,
+      "document": true,
+      "isActive": true,
+      "price": "35000.00",
+      "km": "5000.00",
+      "hp": 550,
+      "maintenence": false,
+      "img": null,
+      "categories": {
+        "id": "69a2d850-6b31-4d48-82d3-492d7ab40696",
+        "name": "Categoria A",
+        "automatic": false,
+        "type": "hatch",
+        "airConditioning": true,
+        "directionType": "eletro-hidraulica",
+        "powerWindows": true,
+        "pricePerDay": "500.00",
+        "pricePerMouth": "1990.00",
+        "pricePeryear": "12000.00",
+        "isActive": true
+      }
+    }
+  }
+}
+```
+
+📥 **/GET**
+
+Retorna todos os alugueis feitos pelo usuário.
+
+🔐 Nível de permissão da rota: **usuário**.
+
+Retorno esperado (200):
 
 <h1 align="center">👥 Desenvolvedores responsáveis 👥</h1>
 
