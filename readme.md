@@ -1280,7 +1280,7 @@ Retorno esperado (200):
 					"name": "Juarez Silveira"
 				}
 		]
-	},
+	}
 ]
 ```
 
