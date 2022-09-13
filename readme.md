@@ -87,18 +87,18 @@ Padrão de corpo (body) para a requisição:
 Retorno esperado (201):
 
 ```json
-	{
-		"id": "5c772eeb-6ae6-4201-8423-b7db66ec17fc",
-		"name": "Julio Cesar",
-		"birthDate": "1998-05-07",
-		"cpf": "12345678910",
-		"age": 24,
-		"email": "julhino@gmail.com",
-		"isAdm": false,
-		"isActive": true,
-		"cnh": null,
-		"address": null
-	},
+{
+  "id": "5c772eeb-6ae6-4201-8423-b7db66ec17fc",
+  "name": "Julio Cesar",
+  "birthDate": "1998-05-07",
+  "cpf": "12345678910",
+  "age": 24,
+  "email": "julhino@gmail.com",
+  "isAdm": false,
+  "isActive": true,
+  "cnh": null,
+  "address": null
+},
 ```
 
 Observação: Quando o parâmetro **isAdm** é omisso na requisição, é gerado um valor para propriedade de **false** por padrão pelo servidor.
@@ -149,14 +149,148 @@ Lista todos os aluguéis efetuados pelo usuário na aplicação (histórico).
 Retorno esperado (200):
 
 ```json
-"cars": [
-	{		"id": "45546545",
-		"todos": "os dados"
-	},
-	{
-		"id": "45546545",
-		"todos": "os dados"
-		}
+[
+  {
+    "id": "0a6a6105-45f9-452e-8d66-3a917e11ca76",
+    "initialDate": "2023-09-10",
+    "initialHour": "05:00:00",
+    "finalDate": "2023-09-12",
+    "finalHour": "08:00:00",
+    "totalValue": "1062.50",
+    "users": {
+      "id": "da281e6e-b9c4-4f57-99e7-1cab82efaed8",
+      "name": "Samuel Persuhn",
+      "birthDate": "1996-06-07",
+      "cpf": "00000000000",
+      "age": 26,
+      "email": "samu192@beecar.com",
+      "isAdm": true,
+      "password": "$2a$10$3XSnFYk2SvlsMjpVrr/ve.Uh1xx2zUIu8AA.41./JGaqQrN.O0ykm",
+      "isActive": true,
+      "cnh": {
+        "id": "ab6327c4-3792-49b8-a870-7193b93ea580",
+        "type": "AB",
+        "number": "13245687900",
+        "validate": "2022-10-09"
+      },
+      "address": {
+        "id": "e429e3ae-2a62-4935-b4e6-d2390fe06e0d",
+        "district": "Caiobá",
+        "zipCode": "84520060",
+        "number": "9999",
+        "city": "Jacundá",
+        "state": "RR"
+      },
+      "cards": [
+        {
+          "id": "401670e5-59b3-452d-9dc7-d6ac783e81ec",
+          "cardNumber": "123679823",
+          "validate": "2024-10-09",
+          "name": "Juarez Silveira"
+        }
+      ]
+    },
+    "cars": {
+      "id": "7e94589d-efc1-4ac7-aced-57667dda289e",
+      "licensePlate": "9999999",
+      "color": "white",
+      "model": "Nova Balanciaga",
+      "fuel": "G",
+      "year": 2015,
+      "brand": "Ford",
+      "rented": false,
+      "document": true,
+      "isActive": true,
+      "price": "35000.00",
+      "km": "5000.00",
+      "hp": 550,
+      "maintenence": false,
+      "img": null,
+      "categories": {
+        "id": "69a2d850-6b31-4d48-82d3-492d7ab40696",
+        "name": "Categoria A",
+        "automatic": false,
+        "type": "hatch",
+        "airConditioning": true,
+        "directionType": "eletro-hidraulica",
+        "powerWindows": true,
+        "pricePerDay": "500.00",
+        "pricePerMouth": "1990.00",
+        "pricePeryear": "12000.00",
+        "isActive": true
+      }
+    }
+  },
+  {
+    "id": "a372cd72-6543-4b99-9da6-16b3401c998a",
+    "initialDate": "2023-09-10",
+    "initialHour": "05:00:00",
+    "finalDate": "2023-09-12",
+    "finalHour": "10:00:00",
+    "totalValue": "1104.17",
+    "users": {
+      "id": "da281e6e-b9c4-4f57-99e7-1cab82efaed8",
+      "name": "Samuel Persuhn",
+      "birthDate": "1996-06-07",
+      "cpf": "00000000000",
+      "age": 26,
+      "email": "samu192@beecar.com",
+      "isAdm": true,
+      "isActive": true,
+      "cnh": {
+        "id": "ab6327c4-3792-49b8-a870-7193b93ea580",
+        "type": "AB",
+        "number": "13245687900",
+        "validate": "2022-10-09"
+      },
+      "address": {
+        "id": "e429e3ae-2a62-4935-b4e6-d2390fe06e0d",
+        "district": "Caiobá",
+        "zipCode": "84520060",
+        "number": "9999",
+        "city": "Jacundá",
+        "state": "RR"
+      },
+      "cards": [
+        {
+          "id": "401670e5-59b3-452d-9dc7-d6ac783e81ec",
+          "cardNumber": "123679823",
+          "validate": "2024-10-09",
+          "name": "Juarez Silveira"
+        }
+      ]
+    },
+    "cars": {
+      "id": "7e94589d-efc1-4ac7-aced-57667dda289e",
+      "licensePlate": "9999999",
+      "color": "white",
+      "model": "Nova Balanciaga",
+      "fuel": "G",
+      "year": 2015,
+      "brand": "Ford",
+      "rented": false,
+      "document": true,
+      "isActive": true,
+      "price": "35000.00",
+      "km": "5000.00",
+      "hp": 550,
+      "maintenence": false,
+      "img": null,
+      "categories": {
+        "id": "69a2d850-6b31-4d48-82d3-492d7ab40696",
+        "name": "Categoria A",
+        "automatic": false,
+        "type": "hatch",
+        "airConditioning": true,
+        "directionType": "eletro-hidraulica",
+        "powerWindows": true,
+        "pricePerDay": "500.00",
+        "pricePerMouth": "1990.00",
+        "pricePeryear": "12000.00",
+        "isActive": true
+      }
+    }
+  }
 ]
 ```
 
