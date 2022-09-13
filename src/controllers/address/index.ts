@@ -34,7 +34,7 @@ const createAddressController = async (req: Request, res: Response) => {
 
     const newAddress = await createAddressService(id, address);
 
-    return res.status(200).json(newAddress);
+    return res.status(201).json(newAddress);
   } catch (error) {
     if (error instanceof AppError) {
       handleError(error, res);

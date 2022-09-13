@@ -4,6 +4,7 @@ import request from "supertest";
 import app from "../../../app";
 import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
 import {
+  mockedAddress,
   mockedAdmin,
   mockedAttUser,
   mockedCard,
@@ -103,12 +104,19 @@ describe("/profile", () => {
       .post("/profile/card")
       .send(mockedCard)
       .set("Authorization", `Bearer ${userLogin.body.token}`);
+    await request(app)
+      .post("/profile/cnh")
+      .send(mockedCnh)
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
+    await request(app)
+      .post("/profile/address")
+      .send(mockedAddress)
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
 
     await request(app)
       .post("/category")
       .send(mockedCategory)
       .set("Authorization", `Bearer ${admLogin.body.token}`);
-
     const car = await request(app)
       .post("/cars")
       .send(mockedCars)

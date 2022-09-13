@@ -17,14 +17,18 @@ categoryRouter.post(
   userIsAdmMiddleware,
   createCategoryController
 );
+
 categoryRouter.get("", listCategoryController);
+
 categoryRouter.get("/:id/cars", listCarsOfCategoryController);
+
 categoryRouter.patch(
   "/:id",
   ensureAuthenticationMiddleware,
   userIsAdmMiddleware,
   updateCategoryController
 );
+
 categoryRouter.delete(
   "/:id",
   ensureAuthenticationMiddleware,

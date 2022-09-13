@@ -4,11 +4,13 @@ import request from "supertest";
 import app from "../../../app";
 import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
 import {
+  mockedAddress,
   mockedAdmin,
   mockedAttRent,
   mockedCard,
   mockedCars,
   mockedCategory,
+  mockedCnh,
   mockedLoginAdm,
   mockedLoginUser,
   mockedRent,
@@ -43,6 +45,15 @@ describe("/rent", () => {
       .post("/profile/card")
       .send(mockedCard)
       .set("Authorization", `Bearer ${userLogin.body.token}`);
+    await request(app)
+      .post("/profile/cnh")
+      .send(mockedCnh)
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
+    await request(app)
+      .post("/profile/address")
+      .send(mockedAddress)
+      .set("Authorization", `Bearer ${userLogin.body.token}`);
+
     await request(app)
       .post("/category")
       .send(mockedCategory)
@@ -84,7 +95,7 @@ describe("/rent", () => {
       .send(mockedAttRent)
       .set("Authorization", `Bearer ${userLogin.body.token}`);
 
-    expect(response.body.update.finalHour).toEqual("15:45");
+    expect(response.body.finalHour).toEqual("15:45");
     expect(response.status).toEqual(200);
   });
 });

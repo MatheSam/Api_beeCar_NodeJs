@@ -28,20 +28,32 @@ const createRentService = async (
 
   const user = await UserRepository.findOneBy({ id: userId });
 
-  if (user?.cards?.length === 0) {
-    throw new AppError("You must to have a credit card", 403);
-  }
-
-  if (user?.cards?.some((card) => new Date(card.validate) <= new Date())) {
-    throw new AppError("Some card are expired or invalid", 403);
-  }
-
   if (!user) {
     throw new AppError("User not found!", 404);
   }
 
+  if (!user.cnh) {
+    throw new AppError("User need to have a CNH to create a rent", 401);
+  }
+
+  if (!user.address) {
+    throw new AppError("User need to have a address to create a rent", 401);
+  }
+
+  if (user.cards?.length === 0) {
+    throw new AppError("You must to have a credit card", 403);
+  }
+
+  if (user.cards?.some((card) => new Date(card.validate) <= new Date())) {
+    throw new AppError("Some card are expired or invalid", 403);
+  }
+
   if (new Date() >= new Date(finalDate)) {
     throw new AppError("Not allowed to change date in the same day", 403);
+  }
+
+  if (new Date(initialDate) == new Date()) {
+    await carRepository.update(carId, { rented: true });
   }
 
   const rentPrice = calcRent(
