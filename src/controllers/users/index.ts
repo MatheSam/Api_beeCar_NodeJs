@@ -47,7 +47,7 @@ const listProfileCarsController = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
     const cars = await listProfileCarsService(id);
-    return res.json(cars);
+    return res.json(instanceToPlain(cars));
   } catch (error) {
     if (error instanceof AppError) {
       handleError(error, res);

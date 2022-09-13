@@ -5,6 +5,16 @@ import { AppError } from "../../errors/AppError";
 const listCarsOfCategoryService = async (id: string) => {
   const categoryRepository = AppDataSource.getRepository(Categories);
 
+  if (id.length !== 36) {
+    throw new AppError("Category not found", 404);
+  }
+
+  const category = await categoryRepository.findOneBy({ id });
+
+  if (!category) {
+    throw new AppError("Category not found", 404);
+  }
+
   const carsOfCategory = await categoryRepository.findOne({
     where: {
       id: id,

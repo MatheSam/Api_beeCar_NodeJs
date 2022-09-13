@@ -23,11 +23,15 @@ const createCNHService = async (
     throw new AppError("CNH already exists", 401);
   }
 
+  const user = await userRepository.findOneBy({ id });
+
+  if (user?.cnh) {
+    throw new AppError("User already have cnh", 401);
+  }
+
   const cnh = await cnhRepository.save({ type, number, validate });
 
   await userRepository.update(id, { cnh });
-
-  const user = await userRepository.findOneBy({ id });
 
   return user;
 };
